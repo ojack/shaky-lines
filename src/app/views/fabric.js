@@ -2,7 +2,7 @@ const html = require('choo/html')
 const { fabric } = require('fabric')
 const Component = require('choo/component')
 var loop = require('raf-loop')
-const { desktopCapturer } = require('electron')
+// const { desktopCapturer } = require('electron')
 const notes = require('./../../performance/code-notes.js')
 
 // const screenshare = require('./get-screen.js')
@@ -41,8 +41,8 @@ module.exports = class Fabric extends Component {
 
     this.add = this.add.bind(this)
 
-  //  expose(this.addScreenshare.bind(this), window, "screen")
-  expose(this.electronScreenshare.bind(this), window, "screen")
+   expose(this.addScreenshare.bind(this), window, "screen")
+  // expose(this.electronScreenshare.bind(this), window, "screen")
     expose(this.addWebcam.bind(this), window, "cam")
     expose(this.addText.bind(this), window, "text")
     expose(this.loadVideoFromFile.bind(this), window, "video")
