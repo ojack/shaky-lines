@@ -3,6 +3,7 @@ const devtools = require('choo-devtools')
 const choo = require('choo')
 const store = require('./app/store.js')
 const Fabric = require('./app/views/fabric.js')
+const Pixi = require('./app/views/pixi.js')
 const Hydra = require('./app/views/hydra-canvas.js')
 const Editor = require('./app/views/editor.js')
 const details = require('./app/views/details.js')
@@ -51,13 +52,14 @@ const floating = ( content, show) => {
       `
 }
 
+//      <div class="w-100 h-100 absolute" id="fabric-container">${state.cache(Fabric, 'fabric').render()}</div>
 
   // ${state.cache(Editor, 'editor').render()}
 function mainView (state, emit) {
   return html`
     <div class="w-100 h-100 absolute courier bg-black">
       <div class="w-100 h-100 absolute" id="hydra-container">${state.cache(Hydra, 'hydra').render()}</div>
-      <div class="w-100 h-100 absolute" id="fabric-container">${state.cache(Fabric, 'fabric').render()}</div>
+      <div class="w-100 h-100 absolute" id="fabric-container">${state.cache(Pixi, 'pixi').render()}</div>
       <div class="fixed w-100 h-100 top-0 left-0 pa2" style="pointer-events:none">
         ${state.cache(Editor, 'editor').render({ show: state.panels.editor})}
       </div>

@@ -17,14 +17,14 @@ module.exports = (state, emit) => {
     emit('togglePanel', 'details')
   }
   const addIcons = [
-    { icon: "fas fa-edit", onClick: state.fabric.toggleDrawing.bind(state.fabric)},
-    { icon: "flaticon-square-17 ml0", type: "Rect" },
-    { icon: "flaticon-circle", type: "Circle" },
-    { icon: "flaticon-triangle", type: "Triangle" },
-    { icon: "fas fa-font", onClick:  state.fabric.addText.bind(state.fabric) },
-  //  { icon: "fas fa-desktop", onClick: state.fabric.addScreenshare.bind(state.fabric) },
-     // { icon: "fas fa-desktop", onClick: state.fabric.electronScreenshare.bind(state.fabric) },
-    { icon: "fas fa-video", onClick: state.fabric.addWebcam.bind(state.fabric) },
+  //   { icon: "fas fa-edit", onClick: state.fabric.toggleDrawing.bind(state.fabric)},
+  //   { icon: "flaticon-square-17 ml0", type: "Rect" },
+  //   { icon: "flaticon-circle", type: "Circle" },
+  //   { icon: "flaticon-triangle", type: "Triangle" },
+  //   { icon: "fas fa-font", onClick:  state.fabric.addText.bind(state.fabric) },
+  // //  { icon: "fas fa-desktop", onClick: state.fabric.addScreenshare.bind(state.fabric) },
+  //    // { icon: "fas fa-desktop", onClick: state.fabric.electronScreenshare.bind(state.fabric) },
+  //   { icon: "fas fa-video", onClick: state.fabric.addWebcam.bind(state.fabric) },
     { icon: "far fa-trash-alt", onClick: deleteItem },
     { icon: "fas fa-terminal", onClick: toggleCodeEditor },
     { icon: "fas fa-terminal", onClick: toggleDetails}

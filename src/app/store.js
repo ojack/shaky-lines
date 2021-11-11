@@ -3,7 +3,7 @@ const performance = require('./../performance/code-notes.js')
 module.exports = (state, emitter) => {
   state.selected = null
   state.panels = {
-    editor: true,
+    editor: false,
     details: false
   }
   emitter.on('select', (e) => {
