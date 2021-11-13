@@ -16,8 +16,9 @@ module.exports = (state, emit) => {
   const toggleDetails = () => {
     emit('togglePanel', 'details')
   }
+
   const addIcons = [
-  //   { icon: "fas fa-edit", onClick: state.fabric.toggleDrawing.bind(state.fabric)},
+    { icon: "fas fa-edit", onClick: state.pixi.toggleDrawing.bind(state.pixi)},
   //   { icon: "flaticon-square-17 ml0", type: "Rect" },
   //   { icon: "flaticon-circle", type: "Circle" },
   //   { icon: "flaticon-triangle", type: "Triangle" },

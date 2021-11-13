@@ -4,10 +4,11 @@ module.exports = (state, emitter) => {
   state.selected = null
   state.panels = {
     editor: false,
-    details: false
+    details: true
   }
-  emitter.on('select', (e) => {
-    state.selected = e.target
+  emitter.on('select', (obj) => {
+    state.selected = obj
+    // console.log('selected', e)
     emitter.emit('render')
   })
 

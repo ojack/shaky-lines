@@ -14,6 +14,7 @@
   "author": "ojack",
   "license": "ISC",
   "dependencies": {
+    "@pixi/graphics-smooth": "0.0.17",
     "choo": "^7.1.0",
     "choo-devtools": "^3.0.4",
     "chroma-js": "^2.1.0",
@@ -22,6 +23,7 @@
     "fabric": "^4.1.0",
     "hydra-synth": "^1.3.0",
     "insert-css": "^2.0.0",
+    "perfect-freehand": "^1.0.16",
     "pixi.js": "^6.2.0",
     "raf-loop": "^1.1.3"
   },
