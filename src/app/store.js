@@ -2,6 +2,10 @@ const performance = require('./../performance/code-notes.js')
 
 module.exports = (state, emitter) => {
   state.selected = null
+  state.style = {
+    color0: "salmon",
+    color1: "black"
+  }
   state.panels = {
     editor: false,
     details: true

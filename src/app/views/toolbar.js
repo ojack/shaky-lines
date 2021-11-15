@@ -18,7 +18,7 @@ module.exports = (state, emit) => {
   }
 
   const addIcons = [
-    { icon: "fas fa-edit", onClick: state.pixi.toggleDrawing.bind(state.pixi)},
+    { icon: "fas fa-edit", selected: false, onClick: state.pixi.toggleDrawing.bind(state.pixi)},
   //   { icon: "flaticon-square-17 ml0", type: "Rect" },
   //   { icon: "flaticon-circle", type: "Circle" },
   //   { icon: "flaticon-triangle", type: "Triangle" },
@@ -26,18 +26,18 @@ module.exports = (state, emit) => {
   // //  { icon: "fas fa-desktop", onClick: state.fabric.addScreenshare.bind(state.fabric) },
   //    // { icon: "fas fa-desktop", onClick: state.fabric.electronScreenshare.bind(state.fabric) },
   //   { icon: "fas fa-video", onClick: state.fabric.addWebcam.bind(state.fabric) },
-    { icon: "far fa-trash-alt", onClick: deleteItem },
-    { icon: "fas fa-terminal", onClick: toggleCodeEditor },
-    { icon: "fas fa-terminal", onClick: toggleDetails}
+    { icon: "far fa-trash-alt", selected: false, onClick: deleteItem },
+    { icon: "fas fa-terminal", selected: state.panels.editor, onClick: toggleCodeEditor },
+    { icon: "fas fa-terminal", selected: state.panels.details, onClick: toggleDetails}
   ]
 
-  const icon = ({ icon, onClick }) => html`<div class="${icon} pointer dim h2 pa2" onclick=${onClick}></div>`
-  return html`<div class="fixed top-0 right-0 w2 flex flex-column gray b items-center justify-center">
+  const icon = ({ icon, onClick, selected }) => html`<div class="${icon} pointer dim h2 pa2" style=${selected? `background-color:${state.style.color1};color:${state.style.color0}`: ''} onclick=${onClick}></div>`
+  return html`<div class="fixed top-0 right-0 w2 flex flex-column b items-center justify-center" style="color:${state.style.color1}">
   <input type="file" name="file" id="file" class="inputfile"
     accept="image/png, image/jpeg" onchange=${(e) => loadFile(e, state.fabric)}
     />
     <label for="file" class="pa2 fas fa-file-image pointer"></label>
-    ${addIcons.map((obj) => icon({ icon: obj.icon, onClick: () => {
+    ${addIcons.map((obj) => icon({ icon: obj.icon, selected: obj.selected, onClick: () => {
       //  state.fabric.addScreenshare()
       if(obj.onClick) {
         obj.onClick()

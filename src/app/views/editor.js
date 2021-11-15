@@ -2,7 +2,7 @@
 // @todo: remove patch bay from thie (add to config)
 const html = require('choo/html')
 const Component = require('choo/component')
-const repl = require('./repl.js')
+const repl = require('../util/repl.js')
 
 /* eslint-disable no-eval */
 var CodeMirror = require('codemirror/lib/codemirror')
@@ -61,13 +61,13 @@ module.exports = class Editor extends Component {
   }
 
   updateVisibility() {
-    console.log('showing', this)
+   // console.log('showing', this)
     this.codeEl.style.display = this.local.show ? 'block' : 'none'
     this.element.style.display = this.local.show ? 'block' : 'none'
   }
 
   update (state = {}) {
-    console.log(state)
+   // console.log(state)
     this.local = Object.assign({}, this.local, state)
     this.updateVisibility()
     return false

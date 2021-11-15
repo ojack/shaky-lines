@@ -12,13 +12,20 @@ const params = [
 
 //'rotation', 'width', 'height','position', 'fill']
 
-const showParam = (key="", value = "", handleInput=()=>{}, type="number") => html`<div>
-    <div class="dib pr2 gray bg-white pv0 pl1">${key}:</div>
-    <input style="border:none" class="dib w4 bg-white pv0" type=${type} id=${key} name="fname" step="0.5" value=${value} oninput=${handleInput}>
+
+
+module.exports = (obj, style, emit) => {
+  // console.log('object', obj)
+  // show paramerties of object
+  if(obj === null) return html`<div></div>`
+
+  const showParam = (key="", value = "", handleInput=()=>{}, type="number") => html`<div>
+    <div class="dib pr2 pv0 pl1 w4">${key}:</div>
+    <input class="dib w4 pv0" style="border:none; background-color:${style.color0};color:${style.color1}" type=${type} id=${key} name="fname" step="0.5" value=${value} oninput=${handleInput}>
    </div>`
 
 const showXY = (key, point) => {
-  console.log('type', typeof point)
+  // console.log('type', typeof point)
   return ['x', 'y'].map((i) => showParam(
   `${key}${i}`,point[i], (e) => point.set(e.target.value)
   ))
@@ -32,11 +39,6 @@ const showByType = {
   xy: showXY,
   number: showNumber
 }
-
-module.exports = (obj, emit) => {
-  console.log('object', obj)
-  // show paramerties of object
-  if(obj === null) return html`<div></div>`
 
   return html`<div class="pa2 overflow-y-auto" style="height:20em;">${params.map((param) => showByType[param.type](param.key, obj[param.key], obj))}</div>`
   // const input = (key, value) => {

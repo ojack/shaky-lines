@@ -11,25 +11,20 @@ const params = [
 // draggable agent 
 module.exports = class Agent {
     constructor (emit) {
-        const graphics = new PIXI.Graphics();
-        graphics.beginFill(0xDE3249);
-        graphics.drawRect(0, 0, 100, 100);
-        graphics.endFill();
-
-        graphics.interactive = true
-        // graphics.buttonMode = true
-        graphics.pivot.set(50)
-        graphics.cursor = 'move'
-
-        graphics.position.set(200, 200)
+        const graphics = new PIXI.Graphics()
+        const container = new PIXI.Container()
+        container.interactive = true
        
-        graphics
+        container
         .on('pointerdown', onDragStart)
         .on('pointerup', onDragEnd)
         .on('pointerupoutside', onDragEnd)
         .on('pointermove', onDragMove);
 
-        this.el = graphics
+        this.container = container
+        container.addChild(graphics)
+        this.g = graphics
+        this.container.cursor = 'move'
 
 
         function onDragStart(event) {
@@ -38,6 +33,8 @@ module.exports = class Agent {
             // the reason for this is because of multitouch
             // we want to track the movement of this particular touch
             this.data = event.data;
+            const localPosition = this.data.getLocalPosition(this.parent)
+            console.log('starting', localPosition, event.data, event)
             this.alpha = 0.5;
             this.dragging = true;
             // this.cursor = 'move'
@@ -60,6 +57,20 @@ module.exports = class Agent {
 
             }
         }
+    }
+
+    // set pivot for graphics to be in the center of the container
+    // to do: adjust pivot on drag start
+    updatePivot() {
+        const w = this.g.width
+        const h = this.g.height
+        const bounds = this.g.getBounds()
+        const pivotX = bounds.x + bounds.width/2
+        const pivotY = bounds.y + bounds.height/2
+    
+        this.container.pivot.set(pivotX, pivotY)
+        this.container.position.set(pivotX, pivotY)
+        // this.container.position.set(this.container.x + w/2, this.container.y + h/2)
     }
 
     initParams() {

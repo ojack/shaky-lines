@@ -1,8 +1,8 @@
 const html = require('choo/html')
 const Component = require('choo/component')
 const PIXI = require('pixi.js')
-const Agent = require('./pixi-elements/agent.js')
-const Drawing = require('./drawing.js')
+const Rect = require('./pixi-elements/rect.js')
+const Drawing = require('./pixi-elements/drawing.js')
 var loop = require('raf-loop')
 
 
@@ -18,7 +18,9 @@ module.exports = class PixiRenderer extends Component {
   }
 
   toggleDrawing() {
-    this.drawingMode = false
+    this.drawingMode = !this.drawingMode
+    const interactive = !this.drawingMode
+    this.app.stage.children.forEach((child) => child.interactive = interactive)
   }
 
   load (element) {
@@ -29,18 +31,27 @@ module.exports = class PixiRenderer extends Component {
       antialias: true
     })
 
+    this.currDrawing = null
+
     this.app.view.addEventListener('pointerdown', (e) => {
+      if(!this.drawingMode) return
       e.target.setPointerCapture(e.pointerId)
-      this.currDrawing = new Drawing([e.pageX, e.pageY, e.pressure])
-      this.app.stage.addChild(this.currDrawing.el);
+      this.currDrawing = new Drawing(this.emit, [e.pageX, e.pageY, e.pressure])
+      this.app.stage.addChild(this.currDrawing.container);
     })
 
     this.app.view.addEventListener('pointermove', (e) => {
       // console.log('pointer event', e)
       if (e.buttons !== 1) return
-
+      if(!this.drawingMode) return
       this.currDrawing.add([e.clientX, e.clientY, e.pressure])
       this.currDrawing.render()
+    })
+
+    this.app.view.addEventListener('pointerup', (e) => {
+      //console.log('on pointer up', e)
+      if(!this.drawingMode) return
+      this.currDrawing.end()
     })
 
     // const graphics = new PIXI.Graphics();
@@ -49,8 +60,8 @@ module.exports = class PixiRenderer extends Component {
     // graphics.drawRect(50, 50, 100, 100);
     // graphics.endFill();
 
-    const test = new Agent(this.emit)
-    this.app.stage.addChild(test.el);
+    const test = new Rect(this.emit)
+    this.app.stage.addChild(test.container);
 
     //this.canvas = new fabric.Canvas(t his._canvas)
 
