@@ -3,13 +3,13 @@ const html = require('choo/html')
 // property types for different properties:
 // -- 'xy' : PIXI observable point
 // --
-const params = [ 
-  { key: 'scale', type: 'xy' }, 
-  { key: 'skew', type: 'xy' }, 
-  { key: 'position', type: 'xy'},
-  { key: 'angle', type: 'number'},
-  { key: 'tint', type: 'number'}
-]
+// const params = [ 
+//   { key: 'scale', type: 'xy' }, 
+//   { key: 'skew', type: 'xy' }, 
+//   { key: 'position', type: 'xy'},
+//   { key: 'angle', type: 'number'},
+//   { key: 'tint', type: 'number'}
+// ]
 
 //'rotation', 'width', 'height','position', 'fill']
 
@@ -20,7 +20,11 @@ module.exports = (obj, style, emit) => {
   // show paramerties of object
   if(obj === null) return html`<div></div>`
 
-  const showParam = (key="", value = "", handleInput=()=>{}, type="number") => html`<div>
+  console.log('selected obj', obj)
+
+  const { params } = obj
+
+  const showParam = (key="", value = "", handleInput=()=>{}, type="") => html`<div>
     <div class="dib pr2 pv0 pl1 w4">${key}:</div>
     <input class="dib w4 pv0" style="border:none; background-color:${style.color0};color:${style.color1}" type=${type} id=${key} name="fname" step="0.5" value=${value} oninput=${handleInput}>
    </div>`
@@ -41,7 +45,14 @@ const showByType = {
   number: showNumber
 }
 
-  return html`<div class="pa2 overflow-y-auto" style="height:20em;">${params.map((param) => showByType[param.type](param.key, obj[param.key], obj))}</div>`
+const paramControl = ({ key="", value=()=> {}, set=()=>{}, type="", step=0.5}) => html`<div>
+<div class="dib pr2 pv0 pl1 w4">${key}:</div>
+<input class="dib w4 pv0" style="border:none; background-color:${style.color0};color:${style.color1}" type=${type} id=${key} name="fname" step="${step}" value=${value()} oninput=${(e)=>set(e.target.value)}>
+</div>`
+
+  // return html`<div class="pa2 overflow-y-auto" style="height:20em;">${params.map((param) => showByType[param.type](param.key, obj[param.key], obj))}</div>`
+
+  return html`<div class="pa2 overflow-y-auto" style="height:20em;">${params.map(paramControl)}</div>`
   // const input = (key, value) => {
   //   const handleInput = (e) => {
   //   //  console.log(key, e.target.value, typeof e.target.value, parseFloat(e.target.value))
