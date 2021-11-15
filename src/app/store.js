@@ -6,10 +6,16 @@ module.exports = (state, emitter) => {
     color0: "salmon",
     color1: "black"
   }
+  state.renderer = {
+    drawingMode: true
+  }
   state.panels = {
     editor: false,
     details: true
   }
+
+  state.emitter = emitter // hacky...pass around emitter so components can directly listen
+
   emitter.on('select', (obj) => {
     state.selected = obj
     // console.log('selected', e)
@@ -29,10 +35,15 @@ module.exports = (state, emitter) => {
     state.fabric.canvas.requestRenderAll()
   })
 
-  emitter.on('togglePanel', (panel) => {
-    state.panels[panel]  =! state.panels[panel]
+  emitter.on('toggle', (prop, type="panels") => {
+    state[type][prop]  =! state[type][prop]
     emitter.emit('render')
+    if(type== "renderer"){
+      emitter.emit(`renderer: toggle ${prop}`, state[type][prop])
+    }
   })
+
+
 
   emitter.on('deleteCurrentItem', () => {
     console.log(state.fabric.canvas.getActiveObjects())

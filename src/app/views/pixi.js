@@ -13,12 +13,18 @@ module.exports = class PixiRenderer extends Component {
     this.local = state.components[id] = {}
     state.pixi = this
     this.emit = emit
-    this.drawingMode = true
-    this.agents = []
+    //this.drawingMode = state.renderer.drawingMode
+    state.emitter.on('renderer: toggle drawingMode', (val) => {
+      console.log('toggled drawing mode')
+      this.setDrawingMode(val)
+    })
+    this.state = state
+    // this.agents = []
+    // window.agents = this.agents
   }
 
-  toggleDrawing() {
-    this.drawingMode = !this.drawingMode
+  setDrawingMode(val) {
+    this.drawingMode = val
     const interactive = !this.drawingMode
     this.app.stage.children.forEach((child) => child.interactive = interactive)
   }
@@ -54,6 +60,9 @@ module.exports = class PixiRenderer extends Component {
       this.currDrawing.end()
     })
 
+    this.setDrawingMode(this.state.renderer.drawingMode)
+
+
     // const graphics = new PIXI.Graphics();
 
     // graphics.beginFill(0xDE3249);
@@ -63,6 +72,8 @@ module.exports = class PixiRenderer extends Component {
     const test = new Rect(this.emit)
     this.app.stage.addChild(test.container);
 
+    window.stage = this.app.stage
+  
     //this.canvas = new fabric.Canvas(t his._canvas)
 
   }

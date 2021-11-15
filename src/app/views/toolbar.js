@@ -9,16 +9,14 @@ module.exports = (state, emit) => {
     emit('deleteCurrentItem')
   }
 
-  const toggleCodeEditor = () => {
-    emit('togglePanel', 'editor')
+  const toggle = (prop, type="panels") => () => {
+    emit('toggle', prop, type)
   }
 
-  const toggleDetails = () => {
-    emit('togglePanel', 'details')
-  }
+
 
   const addIcons = [
-    { icon: "fas fa-edit", selected: false, onClick: state.pixi.toggleDrawing.bind(state.pixi)},
+    { icon: "fas fa-edit", selected: state.renderer.drawingMode, onClick: toggle('drawingMode', 'renderer')},
   //   { icon: "flaticon-square-17 ml0", type: "Rect" },
   //   { icon: "flaticon-circle", type: "Circle" },
   //   { icon: "flaticon-triangle", type: "Triangle" },
@@ -27,8 +25,8 @@ module.exports = (state, emit) => {
   //    // { icon: "fas fa-desktop", onClick: state.fabric.electronScreenshare.bind(state.fabric) },
   //   { icon: "fas fa-video", onClick: state.fabric.addWebcam.bind(state.fabric) },
     { icon: "far fa-trash-alt", selected: false, onClick: deleteItem },
-    { icon: "fas fa-terminal", selected: state.panels.editor, onClick: toggleCodeEditor },
-    { icon: "fas fa-terminal", selected: state.panels.details, onClick: toggleDetails}
+    { icon: "fas fa-terminal", selected: state.panels.editor, onClick: toggle('editor') },
+    { icon: "fas fa-terminal", selected: state.panels.details, onClick: toggle('details')}
   ]
 
   const icon = ({ icon, onClick, selected }) => html`<div class="${icon} pointer dim h2 pa2" style=${selected? `background-color:${state.style.color1};color:${state.style.color0}`: ''} onclick=${onClick}></div>`

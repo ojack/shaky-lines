@@ -7,7 +7,8 @@ const params = [
   { key: 'scale', type: 'xy' }, 
   { key: 'skew', type: 'xy' }, 
   { key: 'position', type: 'xy'},
-  { key: 'angle', type: 'number'}
+  { key: 'angle', type: 'number'},
+  { key: 'tint', type: 'number'}
 ]
 
 //'rotation', 'width', 'height','position', 'fill']
@@ -23,7 +24,7 @@ module.exports = (obj, style, emit) => {
     <div class="dib pr2 pv0 pl1 w4">${key}:</div>
     <input class="dib w4 pv0" style="border:none; background-color:${style.color0};color:${style.color1}" type=${type} id=${key} name="fname" step="0.5" value=${value} oninput=${handleInput}>
    </div>`
-
+ 
 const showXY = (key, point) => {
   // console.log('type', typeof point)
   return ['x', 'y'].map((i) => showParam(
