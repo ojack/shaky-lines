@@ -2,6 +2,7 @@ const { getStroke } = require('perfect-freehand')
 const PIXI = require('pixi.js')
 const Agent = require('./agent.js')
 
+const randArr = (arr) => arr[Math.floor(Math.random()*arr.length)]
 const rand = (min=0, max=1) => min + Math.random()*(max-min)
 
 module.exports = class Drawing extends Agent{
@@ -11,21 +12,25 @@ module.exports = class Drawing extends Agent{
     //   const g = new PIXI.Graphics()
       // this.el = new PIXI.Graphics()
      // app.stage.addChild(g)
+     console.log(this)
 
       this.points = []
       this.points.push(startPoint)
       this.stroke = [] // outline of current points
       this.strokeOptions =  {
-        size: 16,
+        size: randArr([2, 4, 8, 16, 32]),
         thinning: 0.5,
         smoothing: 0.5,
-        streamline: 0.5
+        streamline: 0.5,
+        start: { cap: false },
+        end: { taper: 100 }
       }
 
+      this.g.tint = 0xffffff * Math.random()
       this.fillStyle = 0x00ff00
       this.lineStyle = {
           color: 0xff0000,
-          width: 2      }
+          width: 0      }
   }
 
   add(point) {

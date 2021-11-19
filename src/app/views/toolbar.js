@@ -6,7 +6,7 @@ const html = require('choo/html')
 module.exports = (state, emit) => {
 
   const deleteItem = () => {
-    emit('deleteCurrentItem')
+    emit('renderer:delete element', state.selected)
   }
 
   const toggle = (prop, type="panels") => () => {
@@ -17,6 +17,7 @@ module.exports = (state, emit) => {
 
   const addIcons = [
     { icon: "fas fa-edit", selected: state.renderer.drawingMode, onClick: toggle('drawingMode', 'renderer')},
+    { icon: "fas fa-file-image", selected: state.panels.files, onClick: toggle('files')},
   //   { icon: "flaticon-square-17 ml0", type: "Rect" },
   //   { icon: "flaticon-circle", type: "Circle" },
   //   { icon: "flaticon-triangle", type: "Triangle" },
@@ -26,11 +27,12 @@ module.exports = (state, emit) => {
   //   { icon: "fas fa-video", onClick: state.fabric.addWebcam.bind(state.fabric) },
     { icon: "far fa-trash-alt", selected: false, onClick: deleteItem },
     { icon: "fas fa-terminal", selected: state.panels.editor, onClick: toggle('editor') },
+    // { icon: "fas fa-grip-horizontal"},// show all agents
     { icon: "fas fa-terminal", selected: state.panels.details, onClick: toggle('details')}
   ]
 
   const icon = ({ icon, onClick, selected }) => html`<div class="${icon} pointer dim h2 pa2" style=${selected? `background-color:${state.style.color1};color:${state.style.color0}`: ''} onclick=${onClick}></div>`
-  return html`<div class="fixed top-0 right-0 w2 flex flex-column b items-center justify-center" style="color:${state.style.color1}">
+  return html`<div class="flex flex-column flex-wrap-reverse" style="pointer-events:all;color:${state.style.color1}">
   <input type="file" name="file" id="file" class="inputfile"
     accept="image/png, image/jpeg" onchange=${(e) => loadFile(e, state.fabric)}
     />

@@ -3,15 +3,16 @@ const performance = require('./../performance/code-notes.js')
 module.exports = (state, emitter) => {
   state.selected = null
   state.style = {
-    color0: "salmon",
-    color1: "black"
+    color0: "black",
+    color1: "aquamarine"
   }
   state.renderer = {
-    drawingMode: true
+    drawingMode: false
   }
   state.panels = {
     editor: false,
-    details: true
+    details: true,
+    files: true
   }
 
   state.emitter = emitter // hacky...pass around emitter so components can directly listen
@@ -45,21 +46,21 @@ module.exports = (state, emitter) => {
 
 
 
-  emitter.on('deleteCurrentItem', () => {
-    console.log(state.fabric.canvas.getActiveObjects())
-    state.fabric.canvas.getActiveObjects().forEach((obj) => {
-      state.fabric.canvas.remove(obj)
-    })
+  emitter.on('renderer:delete element', (el) => {
+    // console.log(state.fabric.canvas.getActiveObjects())
+    // state.fabric.canvas.getActiveObjects().forEach((obj) => {
+    //   state.fabric.canvas.remove(obj)
+    // })
     if(state.selected!== null) {
-      // if camera or screenshare, stop tracks
-      if(state.selected._originalElement && state.selected._originalElement.srcObject) {
-        if (state.selected._originalElement.srcObject.getTracks) {
-          state.selected._originalElement.srcObject.getTracks().forEach((track) => {
-            track.stop()
-          })
-        }
-      }
-      state.fabric.canvas.remove(state.selected)
+      // // if camera or screenshare, stop tracks
+      // if(state.selected._originalElement && state.selected._originalElement.srcObject) {
+      //   if (state.selected._originalElement.srcObject.getTracks) {
+      //     state.selected._originalElement.srcObject.getTracks().forEach((track) => {
+      //       track.stop()
+      //     })
+      //   }
+      // }
+      // state.fabric.canvas.remove(state.selected)
 
       state.selected = null
       emitter.emit('render')

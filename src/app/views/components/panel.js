@@ -1,7 +1,7 @@
 const html = require('choo/html')
 
 
-module.exports = (content, { name, label, showPanel = true } = {}, {color0, color1} = {}) => {
+module.exports = (content, { name, label, showPanel = true } = {}, {color0, color1} = {}, emit) => {
     const columnLayout = true
     const type = 'panels'
     // open chat even if menu is collapsed
@@ -19,14 +19,14 @@ module.exports = (content, { name, label, showPanel = true } = {}, {color0, colo
         ? flex
         : '0'};${hidden};">
           <div class="flex justify-between pa1">
-            <div class="ttu">   <!-- my title  -->  </div>
+            <div class="ttu"> ${label}  </div>
             <i
                   class="fas fa-times self-end dim pointer pa1"
                   style="color:${color1},
                   title="close ${label}"
                   aria-hidden="true"
                   onclick=${() => {
-            emit('layout:toggleMenuItem', name, type)
+            emit('toggle', name, type)
         }} >
             </i>
           </div>
