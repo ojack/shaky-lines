@@ -33,12 +33,12 @@ module.exports = (stage, app) => {
     const randNote = () => Math.floor(Math.random() * notes.length)
     
     let time = 0
-    setInterval((dt) => {
-        time += 0.1
-        // midi channel, octave, note, velocity, length
-       this.midi.push(1, 2, notes[randNote()], 4 + Math.sin(time)*3 , 2)
-       // this.midi.push(0, 3, 4, 15, 0.4)
-    }, 500)
+    // setInterval((dt) => {
+    //     time += 0.1
+    //     // midi channel, octave, note, velocity, length
+    //    this.midi.push(1, 2, notes[randNote()], 4 + Math.sin(time)*3 , 2)
+    //    // this.midi.push(0, 3, 4, 15, 0.4)
+    // }, 500)
 
     console.log(this.midi)
 

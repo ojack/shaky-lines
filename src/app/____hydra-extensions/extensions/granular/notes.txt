@@ -1,0 +1,49 @@
+//
+
+s = new Synth({
+  file: "guitar.mp3"
+})
+
+c = new Cursor()
+
+loop = () => {
+  s.spread = c.pixels // array of values between 0 and 1 [0, 0.1, 0.4]
+  s.transpose = 12
+  s.index++
+}
+
+
+/// melodic
+loop = () => {
+  synth.offset = 1 + x.value[0]/100
+//  synth.density = 0.1 + y.value[0]/255
+}
+synth.attack = 0.01
+synth.release = 0.1
+
+// rhythm
+
+osc(20)
+  //.modulate(o0)
+  .rotate(0, 0.5)
+  .modulateScale(osc(4), -0.8, 1)
+  .out()
+
+y = pixels.create()
+
+x = pixels.create()
+
+y.y = 300
+
+synth.play()
+
+loop = () => {
+  synth.offset = 4 + x.value[0]/100
+//  synth.density = 0.1 + y.value[0]/255
+  synth.gain = y.value[0]/255
+}
+
+synth.attack = 0.01
+synth.release = 0.1
+synth.trans = 0.6
+synth.spread = 0

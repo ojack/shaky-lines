@@ -11,14 +11,40 @@ const params = [
     // { key: 'blendMode', type: 'select', options: PIXI.BLEND_MODES, target: 'g'}
 ]
 
+// const createSquare = (x,  y, tint = 0x00ff00) => {
+//     const square = new PIXI.Sprite(PIXI.Texture.WHITE);
+//     square.tint = tint;
+//     square.factor = 1;
+//     square.anchor.set(0.5);
+//     square.position.set(x, y);
+//     return square;
+// }
+
+// const createControl = (w, h) => {
+//   const container = new PIXI.Container()
+//    const center = createSquare(0, 0, 0xff0000)
+//    const corners = [createSquare(-w/2, -h/2), createSquare(w/2, -h/2), createSquare(w/2, h/2), createSquare(-w/2, h/2)]
+//    corners.forEach((corner) => { container.addChild(corner) })
+//    container.addChild(center)
+
+//    return {
+//        container: container,
+//        corners: corners, 
+//        center: center
+//    }
+// }
+
 module.exports = class Agent {
     constructor(emit, child = null) {
         const self = this
-        const container = new PIXI.Container()
         
+      //  this.control = createControl(200, 200)
+
         this.clones = []
 
-        // container.interactive = true
+        const container = new PIXI.Container()
+
+        container.interactive = true
 
         container
             .on('pointerdown', onDragStart)
@@ -133,6 +159,17 @@ module.exports = class Agent {
         })
     }
 
+    calculatePivot() {
+        const w = this.g.width
+        const h = this.g.height
+        const bounds = this.g.getBounds()
+        const pivotX = bounds.x + bounds.width / 2
+        const pivotY = bounds.y + bounds.height / 2
+        return {
+            x: pivotX, y: pivotY, bounds: bounds
+        }
+    }
+
     // set pivot for graphics to be in the center of the container
     // to do: adjust pivot on drag start
     updatePivot() {
@@ -144,6 +181,7 @@ module.exports = class Agent {
 
         this.container.pivot.set(pivotX, pivotY)
         this.container.position.set(pivotX, pivotY)
+     //   this.control.container.position.set(pivotX, pivotY)
         // this.container.position.set(this.container.x + w/2, this.container.y + h/2)
     }
 }

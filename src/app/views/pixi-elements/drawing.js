@@ -18,12 +18,13 @@ module.exports = class Drawing extends Agent{
       this.points.push(startPoint)
       this.stroke = [] // outline of current points
       this.strokeOptions =  {
-        size: randArr([2, 4, 8, 16, 32]),
-        thinning: 0.5,
+        size: randArr([8]),
+        thinning: 0.9,
         smoothing: 0.5,
         streamline: 0.5,
         start: { cap: false },
-        end: { taper: 100 }
+        end: { taper: 0 },
+        // simulatePressure: false // uncomment to use with tablet
       }
 
       this.g.tint = 0xffffff * Math.random()
