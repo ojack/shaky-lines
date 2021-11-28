@@ -8,7 +8,7 @@ import { Sprite } from '@pixi/picture'
 var loop = require('raf-loop')
 
 module.exports = class VideoGarden {
-  constructor(state, emit, el) {
+  constructor(state, emit, canvas) {
     // super(id)
     // //  console.log("DESKTOP CAPTURER", desktopCapturer, systemPreferences)
     // this.local = state.components[id] = {}
@@ -44,11 +44,11 @@ module.exports = class VideoGarden {
     // window.agents = this.agents
 
     this.app = new PIXI.Application({
-      view: this._canvas,
+      view: canvas,
       backgroundAlpha: 0,
       antialias: true,
-      width: this._canvas.width,
-      height: this._canvas.height
+      width: canvas.width,
+      height: canvas.height
     })
 
     const graphicsContainer = new PIXI.Container()
