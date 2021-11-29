@@ -1,6 +1,7 @@
 const html = require('choo/html')
 const Component = require('choo/component')
-const VideoGarden = require('./video-garden.js')
+const VideoGarden = require('../lib/video-garden.js')
+const DrawSynth = require('../lib/drawSynth.js')
 
 
 module.exports = class PixiRenderer extends Component {
@@ -14,7 +15,8 @@ module.exports = class PixiRenderer extends Component {
   }
 
   load(element) {
-    this.videoGarden = new VideoGarden(this.state, this.emit, this._canvas)
+    //this.videoGarden = new VideoGarden(this.state, this.emit, this._canvas)
+    const drawSynth = new DrawSynth(this.state, this.emit, this._canvas)
   }
 
 
@@ -32,9 +34,11 @@ module.exports = class PixiRenderer extends Component {
     this._canvas = html`<canvas
     style="" width="${width}px" height="${height}px"
     ></canvas>`
+    width = 800
+    height = 800
     this._canvas.width = width
     this._canvas.height = height
     console.log('canvas', width, height, this._canvas)
-    return html`<div class="">${this._canvas}</div>`
+    return html`<div class="" id="canvas-experiments">${this._canvas}</div>`
   }
 }
