@@ -1,7 +1,7 @@
 
 
 module.exports = class Line {
-    constructor ({ interval = 100 } = {}) {
+    constructor ({ interval = 100, readPixel = () => {} } = {}) {
         this.interval = interval
 
         this._lastUpdate = 0
@@ -12,9 +12,10 @@ module.exports = class Line {
         this.duration = 0
         this.numTransforms = 0 // number of times the path has been moved 
        // this.mode = 'wrap'
-        this.read = ({x, y} = {}) => {
 
-        }
+       this.value = 0
+        this._readPixel = readPixel
+
         this.trigger = () => {
             console.log('calling trigger')
         }
@@ -44,8 +45,7 @@ module.exports = class Line {
         this.marker = null
     }
 
-    update (t) {
-        // update time to value based on t passed in
+    _move(t) {
         if(!this.isRecording && this.points.length > 1) {
           
             // const start = p[0].t
@@ -66,19 +66,18 @@ module.exports = class Line {
             }
             const point = p[index]
             this.marker = point
-            // if(this.mode = 'wrap') {
-            //     const end = p[p.length - 1]
-            //     const start = p[0]
-                
-            //     const newP = Object.assign({}, point, {
-            //         x: (end.x + (point.x-start.x))%800,
-            //         y: (end.y + (point.y-start.y))%800
-            //     })
-            //     this.marker = newP
-            //     console.log(newP)
-            // }
-           // console.log(progress, this.duration)
         }
+    }
+
+    _read() {
+        if(this.marker) {
+            this.value = this._readPixel(this.marker.x, this.marker.y)
+        }
+    }
+
+    update (t) {
+       this._move(t)
+       this._read()
     }
 
     // for continuous animation, update point when reaches end
