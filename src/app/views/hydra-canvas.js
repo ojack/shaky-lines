@@ -19,6 +19,7 @@ module.exports = class HydraCanvas extends Component {
     super(id)
 
     this.local = state.components[id] = {}
+    this.state = state
   }
 
   load (element) {
@@ -36,6 +37,9 @@ module.exports = class HydraCanvas extends Component {
     var engine = loop(function(dt) {
       hydra.tick(dt)
     }).start()
+
+    osc(4, 0.02).out()
+    this.state.hydraCanvas = element //hacky way to pass this canvas to other components
   }
 
   update (center) {
@@ -51,7 +55,7 @@ module.exports = class HydraCanvas extends Component {
   } = {}) {
     // this.local.center = center
     this.canvas = html`<canvas
-      style="width:100%;height:100%;" width=${width} height=${height}
+      style="" width=${width} height=${height}
       ></canvas>`
     return this.canvas
   }

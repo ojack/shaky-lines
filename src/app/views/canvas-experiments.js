@@ -16,7 +16,7 @@ module.exports = class PixiRenderer extends Component {
 
   load(element) {
     //this.videoGarden = new VideoGarden(this.state, this.emit, this._canvas)
-    const drawSynth = new DrawSynth(this.state, this.emit, this._canvas)
+    const drawSynth = new DrawSynth(this.state, this.emit, { canvas: this._canvas})
   }
 
 

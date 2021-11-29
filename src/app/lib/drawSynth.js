@@ -4,7 +4,7 @@ const raf = require('raf-loop')
 const NUM_LINES = 10
 
 module.exports = class DrawSynth {
-    constructor (state, emit, canvas) {
+    constructor (state, emit, { canvas, input} = {} ) {
         this.state = state
         this.emit = emit
         this.lines = new Array(NUM_LINES).fill(0).map(() => new Line())
@@ -15,7 +15,7 @@ module.exports = class DrawSynth {
 
         let renderer = new CanvasRenderer(canvas)
 
-        console.log('adding props to canvas', canvas)
+        console.log('state', state)
         canvas.style.border = "1px solid white"
 
         canvas.addEventListener('pointerdown', (e) => {
@@ -61,8 +61,8 @@ class CanvasRenderer {
     constructor(canvas) {
         this.canvas = canvas
         this.ctx = canvas.getContext('2d')
-        this.ctx.strokeStyle = "#fff"
-        this.ctx.fillStyle = "#fff"
+        this.ctx.strokeStyle = "#ed382b"
+        this.ctx.fillStyle = "#ed382b"
     }
 
     draw(line) {
