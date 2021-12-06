@@ -38,7 +38,8 @@ module.exports = class HydraCanvas extends Component {
       hydra.tick(dt)
     }).start()
 
-    osc(10, 0.1).out()
+    osc(40).thresh().out()
+
     this.state.hydra = hydra //hacky way to pass this canvas to other components
   }
 

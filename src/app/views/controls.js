@@ -1,6 +1,7 @@
 const html = require('choo/html')
 const toolbar = require('./toolbar.js')
 const panel = require('./components/panel.js')
+const Editor = require('./editor.js')
 
 // individual panel renderers
 const details = require('./details.js')
@@ -8,6 +9,7 @@ const Files = require('./files.js')
 
 module.exports = function (state, emit) {
   const files = (props = {}) => state.cache(Files, 'files').render(props)
+  const editor = (props = {}) => state.cache(Editor, 'editor').render(props)
 
   const showPanel = (key, component, props) => panel(component(props, state.style, emit), {
     name: key,
@@ -20,6 +22,7 @@ module.exports = function (state, emit) {
 
         <div style="pointer-events:none;" class="flex flex-column flex-wrap-reverse-ns flex-wrap justify-end w6-ns w-100" style="font-size:0.7rem">
           ${showPanel('details', details, state.selected)}
+          ${showPanel('editor', editor, {})}
           ${showPanel('files', files, {})}
 
         </div>

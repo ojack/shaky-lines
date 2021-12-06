@@ -1,5 +1,5 @@
 const PIXI = require('pixi.js')
-const Midi = require('./../../util/midi.js')
+const Midi = require('./../../util/_midi.js')
 const transpose = require('./../../util/transpose.js')
 
 const rand = (min, max) => min + Math.random()*(max-min)

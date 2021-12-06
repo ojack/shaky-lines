@@ -10,7 +10,7 @@ module.exports = (state, emitter) => {
     drawingMode: false
   }
   state.panels = {
-    editor: false,
+    editor: true,
     details: true,
     files: true
   }
@@ -21,6 +21,10 @@ module.exports = (state, emitter) => {
     state.selected = obj
     // console.log('selected', e)
     emitter.emit('render')
+  })
+
+  emitter.on('draw:select', (i) => {
+    console.log('selected', i)
   })
 
   emitter.on('loadCode', (index) => {

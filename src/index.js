@@ -3,10 +3,11 @@ const devtools = require('choo-devtools')
 const choo = require('choo')
 const store = require('./app/store.js')
 // const Fabric = require('./app/views/fabric.js')
-const CanvasExperiments = require('./app/views/canvas-experiments.js')
+const CanvasExperiments = require('./app/views/draw-synth.js')
 const Hydra = require('./app/views/hydra-canvas.js')
 const Editor = require('./app/views/editor.js')
-const controls = require('./app/views/controls.js')
+const drawTools = require('./app/views/draw-tools.js')
+// const controls = require('./app/views/controls.js')
 const css = require('insert-css')
 const keymaps = require('./app/util/keymaps.js')
 
@@ -31,18 +32,22 @@ app.route('/', mainView)
 //app.mount('body')
 app.mount('#choo')
 
+//       ${state.cache(Editor, 'editor').render({ show: state.panels.editor})}
+//      ${controls(state, emit)}
 
 function mainView (state, emit) {
   return html`
-    <div class="w-100 h-100 fixed absolute courier" style="background-color:${state.style.color0};color:${state.style.color1}">
-      <div class="w-100 h-100">
-        <div class="w-100 h-100 absolute" id="hydra-container">${state.cache(Hydra, 'hydra').render({ width: 800, height: 800})}</div>
-        <div class="w-100 h-100 absolute" id="fabric-container">${state.cache(CanvasExperiments, 'canvas-experiments').render({ width: 800, height: 800})}</div>
-        <div class="fixed w-100 h-100 top-0 left-0 pa2" style="pointer-events:none">
-          ${state.cache(Editor, 'editor').render({ show: state.panels.editor})}
-        </div>
+    <div class="w-100 h-100 fixed absolute courier flex" style="background-color:${state.style.color0};color:${state.style.color1}">
+      <div class="relative" style="width:800px;height:800px">
+        <div class="absolute" id="hydra-container">${state.cache(Hydra, 'hydra').render({ width: 800, height: 800})}</div>
+        <div class=" absolute" id="fabric-container">${state.cache(CanvasExperiments, 'canvas-experiments').render({ width: 800, height: 800})}</div>
+
       </div>
-      ${controls(state, emit)}
+      <div class="flex-auto">
+        ${drawTools(state, emit)}
+        ${state.cache(Editor, 'main-editor').render()}
+
+      </div>
     </div>
   `
 }
