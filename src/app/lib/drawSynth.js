@@ -102,7 +102,7 @@ module.exports = class DrawSynth {
 
         console.log('state', state)
         canvas.style.border = "1px solid white"
-
+        canvas.style.touchAction = 'none'
         canvas.addEventListener('pointerdown', (e) => {
             this.synth.start()
             e.target.setPointerCapture(e.pointerId)
@@ -132,7 +132,7 @@ module.exports = class DrawSynth {
         })
 
         canvas.addEventListener('pointermove', (e) => {
-            // console.log('pointer event', e)
+             console.log('pointer move', e)
             if (e.buttons !== 1) return
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
