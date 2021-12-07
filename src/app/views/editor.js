@@ -37,9 +37,22 @@ module.exports = class Editor extends Component {
       extraKeys: {
         'Ctrl-Enter': this.evalBlock.bind(this),
         'Ctrl--': this.zoom.bind(this, -1),
-        'Ctrl-=': this.zoom.bind(this, 1)
+        'Ctrl-=': this.zoom.bind(this, 1),
+        'Ctrl-S': (e) => { 
+          console.log(e)
+          //e.preventDefault()
+          this.emit('editor:save', this.cm.getValue()) 
+        }
       }
     })
+
+    // prevent default ctr-s functionality
+    document.addEventListener("keydown", function(e) {
+      if (e.key === 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+       // alert('captured');
+      }
+    }, false);
 
     this.cm.refresh()
     this.codeEl = document.getElementsByClassName('CodeMirror-scroll')[0]

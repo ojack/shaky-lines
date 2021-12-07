@@ -4,3 +4,6 @@ http://fabricjs.com/kitchensink
 - RECT, CIRCLE, TRIANGLE
 
 - clicking on a shape lets you edit the text properties of that shape
+
+
+

@@ -6,8 +6,9 @@
  // AND also probability according to the velocity
 
 module.exports = class Line {
-    constructor ({ interval = 100, readPixel = () => {}, color, onBang = () => {}, mode="lumaTrigger" } = {}) {
+    constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  onBang = () => {}, mode="lumaTrigger" } = {}, i = 0) {
         this.interval = interval
+        this.index = i
         this.color = color
         this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
@@ -15,6 +16,7 @@ module.exports = class Line {
         this.marker = null
         this.isRecording = true
         this._startTime = 0
+        this._timeToNext = interval
         this.duration = 0
 
         // trigger mode
@@ -28,7 +30,7 @@ module.exports = class Line {
         this.numTransforms = 0 // number of times the path has been moved 
        // this.mode = 'wrap'
 
-       this._bangTime = null
+       this._bangTime = 0
 
        this.prevValue = 0
        this.value = 0
@@ -43,30 +45,41 @@ module.exports = class Line {
     }
 
     set(props = {}){
-        if(props.onBang) {
+        console.log('setting', props)
+        if('onBang' in props) {
             this.onBang = props.onBang
         }
-        if(props.interval) {
-            this.interval = props.interval
+        if('interval' in props) {
+            if (typeof props.interval === 'function') {
+                this.interval = props.interval
+            } else {
+                this.interval = () => props.interval
+            }
         }
+        if('mode' in props) {
+            this.mode = props.mode
+        }
+        console.log(this)
     }
 
     addPoint (_p) {
-        console.log(_p.t, _p)
+      //  console.log(_p.t, _p, this, this.points)
         const p = Object.assign({}, _p, { t: _p.t - this._startTime})
         this.points.push(p)
         this.marker = p
         this.x = this.marker.x
         this.y = this.marker.y
         this.isRecording = true
+       
     }
 
     startRecording(t) {
         this._startTime = t
-        this._bangTime = this._startTime
+       // this._bangTime = this._startTime
         this.numTransforms = 0
     }
     stopRecording() {
+        console.log('points', this, this.points)
         const p = this.points
         this.isRecording = false
         this.duration =  p[p.length - 1].t
@@ -108,27 +121,33 @@ module.exports = class Line {
         if(this.marker) {
             this.prevValue = this.value
             this.value = this._readPixel(this.marker.x, this.marker.y)
-            if(this.mode == "lumaTrigger" && this._shouldTrigger === false) {
-               
-                this._shouldTrigger = this._checkLumaTrigger(this.prevValue, this.value)
-              //  console.log('checking', this._shouldTrigger, this.prevValue, this.value)
+            if(this.mode == "lumaTrigger"){
+                if(this._shouldTrigger === false) {
+                    this._shouldTrigger = this._checkLumaTrigger(this.prevValue, this.value)
+                }
             } else {
                 this._shouldTrigger = true
+               // this._bangTime = 0
+                console.log('should trigger', this)
             }
+            // this._shouldTrigger = true
         }
     }
 
     _trigger(t) {
       //  console.log(t, this._bangTime, this.interval)
+      if(this.marker) {
         if(this._bangTime !== null) {
            
-            if(t - this._bangTime >= this.interval) {
-                if(this._shouldTrigger) {
+            if(t - this._bangTime >= this._timeToNext) {
+               if(this._shouldTrigger) {
                     this.onBang(this)
                     this._shouldTrigger = false
+                    this._timeToNext = this.interval(this)
                 }
                 this._bangTime = t
             }
+        }
         }
     }
 

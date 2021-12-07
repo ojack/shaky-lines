@@ -1,21 +1,26 @@
 const Line = require('./line.js')
+// const Line = require('./multi-line.js')
 const raf = require('raf-loop')
 const Synth = require('./tone.js')
 const colors = require('./colors.js')
-const { Scale, Midi } = require('@tonaljs/tonal')
 const MidiOut = require('./midi.js')
+const scale = require('./midi-scales.js')
 
 const NUM_LINES = colors.length
 
-const SCALES = Scale.names()
 
-const NOTES = Scale.get("A minor pentatonic").notes.map((note) => Midi.toMidi(`${note}3`))
+//window.scale = Scale
+const notes = scale("A3", "pentatonic", 3)
 
-console.log('scale', Scale, Scale.names(), NOTES)
+window.notes = notes
+window.quantize = (val = 0, arr = []) => arr[Math.floor(val*arr.length)]
+window.choose = (arr) => arr[Math.floor(Math.random()*arr.length)]
+console.log('NOTES', notes)
+
+//console.log('scale', Scale, Scale.names(), notes)
 
 module.exports = class DrawSynth {
     constructor (state, emit, { container, width, height, input} = {} ) {
-        window.drawSynth = this
        
         // canvas for rendering agents
         const canvas = document.createElement('canvas')
@@ -35,8 +40,6 @@ module.exports = class DrawSynth {
         container.appendChild(baseCanvas)
         container.appendChild(canvas)
 
-       s0.init({ src: baseCanvas })
-       src(s0).out()
 
         console.log(input, 'input')
         const gl = input.regl._gl
@@ -45,6 +48,13 @@ module.exports = class DrawSynth {
         this.midi = new MidiOut()
         this.synth = new Synth()
 
+
+        window.drawSynth = this
+        window.notes = notes
+        window.midi = this.midi
+
+       s0.init({ src: baseCanvas })
+       src(s0).out()
 
         let renderer = new CanvasRenderer(canvas)
 
@@ -69,13 +79,14 @@ module.exports = class DrawSynth {
             color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
             onBang: (v) => { 
                 const { value } = v
-              //  console.log('banging', v)
+                console.log('banging', v)
                // if(Math.random() < value)
               //   this.synth.trigger(1) 
               //this.midi.send(80 - i * 5)
-               this.midi.send(NOTES[i])
+               this.midi.send(notes[i])
 
             },
+            // mode: "",
             //interval: interval/division // ms between checking for  each bang
             interval: 500
         }))
@@ -83,6 +94,8 @@ module.exports = class DrawSynth {
         this.lines.forEach((line, i) => {
             window[`p${i}`] = line})
         this.currIndex = 0
+
+        console.log('created lines', this.lines)
 
         //let this.currLine = this.lines[currIndex]
         this.currLine = this.baseCanvas
@@ -93,6 +106,7 @@ module.exports = class DrawSynth {
         canvas.addEventListener('pointerdown', (e) => {
             this.synth.start()
             e.target.setPointerCapture(e.pointerId)
+            console.log('curr line', this.currLine)
             this.currLine.clear()
             this.currLine.startRecording(performance.now())
             this.currLine.addPoint({
@@ -106,13 +120,14 @@ module.exports = class DrawSynth {
         canvas.addEventListener('keydown', (e) => {
           console.log(e.key)
            if(isFinite(e.key)) {
-                if(e.key === "0") {
-                    this.currLine = this.baseCanvas
-                    this.currIndex = e.key
+                // if(e.key === "0") {
+                //     this.currLine = this.baseCanvas
+                //     this.currIndex = e.key
         
-                } else {
-                     this.selectLine(e.key-1)
-                }
+                // } else {
+                    // this.selectLine(e.key)
+                     this.emit('draw:select', e.key)
+               // }
            }
         })
 
@@ -122,7 +137,7 @@ module.exports = class DrawSynth {
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
-            // console.log(e.pressure)
+             console.log(this.currLine)
           //  this.currDrawing.add([e.clientX, e.clientY, e.pressure])
            // this.currDrawing.render()
         })
@@ -131,6 +146,8 @@ module.exports = class DrawSynth {
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
+            console.log('stop', this.currLine)
+
             this.currLine.stopRecording()
             //console.log('on pointer up', e)
           //  if (!this.drawingMode) return
@@ -150,8 +167,16 @@ module.exports = class DrawSynth {
     selectLine(index) {
        // else if(isFinite(e.key)) {
             //console.log('number', e.key)
-            this.currIndex = index
-            this.currLine = this.lines[this.currIndex]
+            const i = parseFloat(index)
+            this.currIndex = i
+            if(index == 0) {
+                this.currLine = this.baseCanvas
+             //   console.log('set current line to', this.baseCanvas, this.currLine)
+               // this.currIndex = index
+            } else {
+          //  this.currIndex = index
+            this.currLine = this.lines[i - 1]
+            }
        // }
     }
 
@@ -166,7 +191,7 @@ class BaseCanvas {
     constructor(canvas) {
         this.ctx = canvas.getContext('2d')
         this.ctx.strokeStyle = "#fff"
-        this.ctx.lineWidth = 8
+        this.ctx.lineWidth = 16
         this.prevPoint = null
     }
 
@@ -204,27 +229,31 @@ class CanvasRenderer {
     }
 
     draw(line) {
-        const l = (1 - line.value) * 255
         this.ctx.strokeStyle = line._strokeStyle
         // this.ctx.fillStyle = `rgb(${l}, ${l}, ${l})`
        // this.ctx.fillStyle = line._shouldTrigger ? "#fff" :  line._strokeStyle
        this.ctx.fillStyle =  line._strokeStyle
-       if(line.points.length > 1) {
-            const points = line.points
-            this.ctx.beginPath()
-            this.ctx.moveTo(points[0].x, points[0].y)
-            points.forEach((point) => {
-                this.ctx.lineTo(point.x, point.y)
-            })
-            this.ctx.stroke()
-        }
-        if(line.marker !== null) {
-            const m = line.marker
-            const w = line._shouldTrigger ? 100 : 20
-            this.ctx.fillRect(m.x - w/2, m.y - w/2, w, w)
-            this.ctx.strokeRect(m.x - w/2, m.y - w/2, w, w)
-           // this.ctx.stroke()
-        }
+       // line.lines.forEach((line) => {
+            const l = (1 - line.value) * 255
+
+            if(line.points.length > 1) {
+                 const points = line.points
+                 this.ctx.beginPath()
+                 this.ctx.moveTo(points[0].x, points[0].y)
+                 points.forEach((point) => {
+                     this.ctx.lineTo(point.x, point.y)
+                 })
+                 this.ctx.stroke()
+             }
+             if(line.marker !== null) {
+                 const m = line.marker
+                 const w = line._shouldTrigger ? 100 : 20
+                 this.ctx.fillRect(m.x - w/2, m.y - w/2, w, w)
+                 this.ctx.strokeRect(m.x - w/2, m.y - w/2, w, w)
+                // this.ctx.stroke()
+             }
+       // })
+     
     }
 
     clear() {

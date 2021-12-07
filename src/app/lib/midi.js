@@ -27,7 +27,7 @@ module.exports = class Midi {
         }
 
         const midiMessageReceived = (e, input) => {
-            console.log(e, input)
+            //console.log(e, input)
         }
 
         // start listening
@@ -52,6 +52,12 @@ module.exports = class Midi {
             // Then send the note off. You can send this separately if you want 
             // (i.e. when the button is released)
            this.currDevice.send(msgOff, performance.now() + duration); 
+        }
+    }
+
+    cc(channel = 0, val = 100) {
+        if(this.currDevice) {
+            this.currDevice.send([0xB0, channel, val])
         }
     }
 
