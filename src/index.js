@@ -29,6 +29,8 @@ app.use(devtools())
 app.use(store)
 app.use(keymaps)
 app.route('/', mainView)
+app.route('/spirals', mainView)
+
 //app.mount('body')
 app.mount('#choo')
 
