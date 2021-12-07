@@ -23,7 +23,7 @@ css(`.styled-background {
   padding: 2px;
 }
   `)
-  
+
 
 const app = choo()
 app.use(devtools())
@@ -31,6 +31,8 @@ app.use(store)
 app.use(keymaps)
 app.route('/', mainView)
 app.route('/spirals', mainView)
+app.route('*', mainView)
+
 
 //app.mount('body')
 app.mount('#choo')
@@ -41,9 +43,9 @@ app.mount('#choo')
 function mainView (state, emit) {
   return html`
     <div class="w-100 h-100 fixed absolute courier flex" style="background-color:${state.style.color0};color:${state.style.color1}">
-      <div class="relative" style="flex-shrink:0;width:800px;height:800px">
-        <div class="absolute" id="hydra-container">${state.cache(Hydra, 'hydra').render({ width: 800, height: 800})}</div>
-        <div class=" absolute" id="fabric-container">${state.cache(CanvasExperiments, 'canvas-experiments').render({ width: 800, height: 800})}</div>
+      <div class="relative" style="flex-shrink:0;width:${state.style.width}px;height:${state.style.width}px">
+        <div class="absolute" id="hydra-container">${state.cache(Hydra, 'hydra').render({ width: state.style.width, height: state.style.width})}</div>
+        <div class=" absolute" id="fabric-container">${state.cache(CanvasExperiments, 'canvas-experiments').render({ width: state.style.width, height: state.style.width})}</div>
 
       </div>
       <div class="flex-auto">

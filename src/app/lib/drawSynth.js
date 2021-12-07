@@ -137,7 +137,7 @@ module.exports = class DrawSynth {
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
-             console.log(this.currLine)
+            // console.log(this.currLine)
           //  this.currDrawing.add([e.clientX, e.clientY, e.pressure])
            // this.currDrawing.render()
         })
