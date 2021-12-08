@@ -1,9 +1,14 @@
-module.exports = class Midi {
+const Bus = require('nanobus')
+
+
+module.exports = class Midi extends Bus {
     constructor (){
+        super()
         this.connect()
 
         this.inputs = []
         this.outputs = []
+        this.currDevice === null
     }
 
     initDevices(midi) {
@@ -22,8 +27,10 @@ module.exports = class Midi {
           this.outputs.push(output.value);
         }
 
+        this.emit('device update', this.inputs, this.outputs)
+
         if(this.outputs.length > 0) {
-            this.currDevice = this.outputs[0]
+            this.currDevice = 0
         }
 
         const midiMessageReceived = (e, input) => {
@@ -38,8 +45,14 @@ module.exports = class Midi {
         console.log('midi outputs', this.outputs)
     }
 
+    select(i) {
+        if(this.outputs.length > i) {
+            this.currDevice = i
+        }
+    }
+
     send(pitch = 60, velocity = 100, duration = 100) {
-        if(this.currDevice) {
+        if(this.currDevice !== null) {
             const NOTE_ON = 0x90;
             const NOTE_OFF = 0x80;
             
@@ -47,16 +60,16 @@ module.exports = class Midi {
             const msgOff = [NOTE_OFF, pitch, velocity];
             
             // First send the note on;
-           this.currDevice.send(msgOn); 
+           this.outputs[this.currDevice].send(msgOn); 
                 
             // Then send the note off. You can send this separately if you want 
             // (i.e. when the button is released)
-           this.currDevice.send(msgOff, performance.now() + duration); 
+           this.outputs[this.currDevice].send(msgOff, performance.now() + duration); 
         }
     }
 
     cc(channel = 0, val = 100) {
-        if(this.currDevice) {
+        if(this.currDevice!== null) {
             this.currDevice.send([0xB0, channel, val])
         }
     }

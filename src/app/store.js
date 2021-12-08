@@ -38,6 +38,12 @@ module.exports = (state, emitter) => {
     emitter.emit('render')
   })
 
+  emitter.on('midi:select', (i) =>{
+    console.log('selected midi', i)
+    state.drawSynth.midi.select(parseFloat(i))
+    emitter.emit('render')
+  })
+
   emitter.on('editor:preset', (index) => {
     loadPreset(index)
     emitter.emit('render')
@@ -65,6 +71,9 @@ module.exports = (state, emitter) => {
     console.log('dom loaded!')
     loadPreset(0)
 
+    state.drawSynth.midi.on('device update', (inputs, outputs) => {
+      emitter.emit('render')
+   })
   })
 
   function loadPreset(index) {

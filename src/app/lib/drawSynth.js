@@ -21,7 +21,7 @@ console.log('NOTES', notes)
 
 module.exports = class DrawSynth {
     constructor (state, emit, { container, width, height, input} = {} ) {
-       
+       state.drawSynth = this
         // canvas for rendering agents
         const canvas = document.createElement('canvas')
         canvas.width = width
@@ -46,6 +46,7 @@ module.exports = class DrawSynth {
         this.state = state
         this.emit = emit
         this.midi = new MidiOut()
+
         this.synth = new Synth()
 
 
@@ -78,17 +79,17 @@ module.exports = class DrawSynth {
             readPixel: readPixel,
             color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
             onBang: (v) => { 
-                const { value } = v
-                console.log('banging', v)
+                const { value, y, x } = v
+              //  console.log('banging', v)
                // if(Math.random() < value)
               //   this.synth.trigger(1) 
               //this.midi.send(80 - i * 5)
-               this.midi.send(notes[i])
+               this.midi.send(quantize(y/height, notes))
 
             },
-            // mode: "",
+            mode: "",
             //interval: interval/division // ms between checking for  each bang
-            interval: 500
+            interval: 250
         }))
 
         this.lines.forEach((line, i) => {
@@ -106,7 +107,7 @@ module.exports = class DrawSynth {
         canvas.addEventListener('pointerdown', (e) => {
             this.synth.start()
             e.target.setPointerCapture(e.pointerId)
-            console.log('curr line', this.currLine)
+           // console.log('curr line', this.currLine)
             this.currLine.clear()
             this.currLine.startRecording(performance.now())
             this.currLine.addPoint({
@@ -118,7 +119,7 @@ module.exports = class DrawSynth {
         canvas.tabIndex = 0
 
         canvas.addEventListener('keydown', (e) => {
-          console.log(e.key)
+       //   console.log(e.key)
            if(isFinite(e.key)) {
                 // if(e.key === "0") {
                 //     this.currLine = this.baseCanvas
@@ -132,7 +133,7 @@ module.exports = class DrawSynth {
         })
 
         canvas.addEventListener('pointermove', (e) => {
-             console.log('pointer move', e)
+            // console.log('pointer move', e)
             if (e.buttons !== 1) return
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
@@ -162,6 +163,8 @@ module.exports = class DrawSynth {
                 renderer.draw(line)
             })
         }).start()
+
+         this.emit('draw:select',1)
     }
 
     selectLine(index) {

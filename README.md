@@ -10,7 +10,7 @@ p0.set({
 })
 
 pAll.set({
-    interval: 200git 
+    interval: 200
 })
 ```
 

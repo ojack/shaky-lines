@@ -7,7 +7,7 @@
 
 module.exports = class Line {
     constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  onBang = () => {}, mode="lumaTrigger" } = {}, i = 0) {
-        this.interval = interval
+        this.setInterval( interval )
         this.index = i
         this.color = color
         this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
@@ -44,17 +44,21 @@ module.exports = class Line {
         
     }
 
+    setInterval(i) {
+        if (typeof i === 'function') {
+            this.interval = i
+        } else {
+            this.interval = () => i
+        }
+    }
+
     set(props = {}){
         console.log('setting', props)
         if('onBang' in props) {
             this.onBang = props.onBang
         }
         if('interval' in props) {
-            if (typeof props.interval === 'function') {
-                this.interval = props.interval
-            } else {
-                this.interval = () => props.interval
-            }
+           this.setInterval(props.interval)
         }
         if('mode' in props) {
             this.mode = props.mode
@@ -128,7 +132,7 @@ module.exports = class Line {
             } else {
                 this._shouldTrigger = true
                // this._bangTime = 0
-                console.log('should trigger', this)
+               // console.log('should trigger', this)
             }
             // this._shouldTrigger = true
         }
