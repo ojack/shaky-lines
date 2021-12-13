@@ -8,7 +8,7 @@ module.exports = class Midi extends Bus {
 
         this.inputs = []
         this.outputs = []
-        this.currDevice === null
+        this.currDevice = null
     }
 
     initDevices(midi) {
@@ -68,20 +68,24 @@ module.exports = class Midi extends Bus {
         }
     }
 
-    cc(channel = 0, val = 100) {
+    cc(controller = 0, val = 100) {
         if(this.currDevice!== null) {
-            this.currDevice.send([0xB0, channel, val])
+            this.currDevice.send([0xB0, controller, val])
         }
     }
 
     connect() {
-        navigator.requestMIDIAccess()
-        .then(
-        (midi) => {
-           // midi.addEventListener('statechange', (event) => this.initDevices(event.target));
-            this.initDevices(midi)
-        },
-          (err) => console.log('Something went wrong', err))
+        if(navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess()
+            .then(
+            (midi) => {
+            // midi.addEventListener('statechange', (event) => this.initDevices(event.target));
+                this.initDevices(midi)
+            },
+            (err) => console.log('Something went wrong', err))
+        } else {
+            console.warn('this browser does not accept midi')
+        }
 
          
     }
