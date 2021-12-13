@@ -6,8 +6,8 @@ module.exports = (state, emitter) => {
     color0: "black",
     // color1: "aquamarine"
     color1: "white",
-    width: 800,
-    height: 800
+    width: window.innerWidth < 800 ? 400 : 800,
+    height: window.innerWidth < 800 ? 400 : 800
   }
   // state.renderer = {
   //   drawingMode: false

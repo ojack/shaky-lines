@@ -22,6 +22,8 @@ module.exports = class Line {
         // trigger mode
         this.mode = mode
         this._shouldTrigger = false
+        this._didTrigger = false // used for rendering
+
         this._checkLumaTrigger = (prev, curr) => {
             if(prev < 0.5 && curr > 0.5)  return true
             return false
@@ -140,12 +142,14 @@ module.exports = class Line {
 
     _trigger(t) {
       //  console.log(t, this._bangTime, this.interval)
+      this._didTrigger = false
       if(this.marker) {
         if(this._bangTime !== null) {
            
             if(t - this._bangTime >= this._timeToNext) {
                if(this._shouldTrigger) {
                     this.onBang(this)
+                    this._didTrigger = true
                     this._shouldTrigger = false
                     this._timeToNext = this.interval(this)
                 }

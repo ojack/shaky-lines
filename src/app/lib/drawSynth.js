@@ -228,7 +228,7 @@ class CanvasRenderer {
         this.ctx = canvas.getContext('2d')
         this.ctx.strokeStyle = "#ed382b"
         this.ctx.fillStyle = "#ed382b"
-        this.ctx.lineWidth = 1
+        this.ctx.lineWidth = 3
     }
 
     draw(line) {
@@ -250,7 +250,7 @@ class CanvasRenderer {
              }
              if(line.marker !== null) {
                  const m = line.marker
-                 const w = line._shouldTrigger ? 100 : 20
+                 const w = line._didTrigger ? 90 : 20
                  this.ctx.fillRect(m.x - w/2, m.y - w/2, w, w)
                  this.ctx.strokeRect(m.x - w/2, m.y - w/2, w, w)
                 // this.ctx.stroke()
