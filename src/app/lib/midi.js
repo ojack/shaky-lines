@@ -51,13 +51,16 @@ module.exports = class Midi extends Bus {
         }
     }
 
-    send(pitch = 60, velocity = 100, duration = 100) {
+    note(pitch = 60, velocity = 100, duration = 100, channel = 0) {
         if(this.currDevice !== null) {
             const NOTE_ON = 0x90;
             const NOTE_OFF = 0x80;
+
+            const channelOn = NOTE_ON + channel
+            const channelOff = NOTE_OFF + channel
             
-            const msgOn = [NOTE_ON, pitch, velocity];
-            const msgOff = [NOTE_OFF, pitch, velocity];
+            const msgOn = [channelOn, pitch, velocity];
+            const msgOff = [channelOff, pitch, velocity];
             
             // First send the note on;
            this.outputs[this.currDevice].send(msgOn); 

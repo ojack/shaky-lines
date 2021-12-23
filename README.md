@@ -6,12 +6,22 @@ p0.bang = (p) => { // what to do on each trigger}
 
 p0.set({
     interval: 
-    bang:
+    trigger:
 })
 
 pAll.set({
     interval: 200
 })
+```
+
+```javascript
+p0.set({
+  interval: () => 250,
+  trigger: ({ y, x, value} ) => {
+    midi.note(quantize(1 - y/height, notes), 100)
+  }
+})
+
 ```
 
 ### Utility functions

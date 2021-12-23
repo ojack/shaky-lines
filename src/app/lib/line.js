@@ -5,8 +5,26 @@
  // trigger at that interval with velocity corresponding to value
  // AND also probability according to the velocity
 
+ const { getStroke } = require('perfect-freehand')
+
+ function getSvgPathFromStroke(stroke) {
+    if (!stroke.length) return ''
+  
+    const d = stroke.reduce(
+      (acc, [x0, y0], i, arr) => {
+        const [x1, y1] = arr[(i + 1) % arr.length]
+        acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2)
+        return acc
+      },
+      ['M', ...stroke[0], 'Q']
+    )
+  
+    d.push('Z')
+    return d.join(' ')
+  }
+
 module.exports = class Line {
-    constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  onBang = () => {}, mode="lumaTrigger" } = {}, i = 0) {
+    constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  trigger = () => {}, mode="" } = {}, i = 0) {
         this.setInterval( interval )
         this.index = i
         this.color = color
@@ -17,7 +35,22 @@ module.exports = class Line {
         this.isRecording = true
         this._startTime = 0
         this._timeToNext = interval
+        this._timeSinceBang = 10000000
         this.duration = 0
+        this.stroke = null
+
+        this.strokeOptions =  {
+            size: 18,
+            thinning: 1.5,
+            // smoothing: 0.2,
+            // streamline: 0.0,
+            start: { cap: false },
+             end: { 
+                 cap: false,
+                 taper: 0 
+                },
+            // simulatePressure: false // uncomment to use with tablet
+          }
 
         // trigger mode
         this.mode = mode
@@ -38,7 +71,7 @@ module.exports = class Line {
        this.value = 0
         this._readPixel = readPixel
 
-        this.onBang = onBang
+        this.trigger = trigger
 
         // add marker properties to overall object
         this.x = 0
@@ -56,8 +89,8 @@ module.exports = class Line {
 
     set(props = {}){
         console.log('setting', props)
-        if('onBang' in props) {
-            this.onBang = props.onBang
+        if('trigger' in props) {
+            this.trigger = props.trigger
         }
         if('interval' in props) {
            this.setInterval(props.interval)
@@ -76,7 +109,10 @@ module.exports = class Line {
         this.x = this.marker.x
         this.y = this.marker.y
         this.isRecording = true
-       
+        const stroke = getStroke(this.points, this.strokeOptions)
+        const path = getSvgPathFromStroke(stroke)
+       this.stroke = new Path2D(path)
+      // console.log(stroke, path, this.stroke)
     }
 
     startRecording(t) {
@@ -148,7 +184,7 @@ module.exports = class Line {
            
             if(t - this._bangTime >= this._timeToNext) {
                if(this._shouldTrigger) {
-                    this.onBang(this)
+                    this.trigger(this)
                     this._didTrigger = true
                     this._shouldTrigger = false
                     this._timeToNext = this.interval(this)

@@ -78,13 +78,13 @@ module.exports = class DrawSynth {
         this.lines = new Array(NUM_LINES).fill(0).map((_, i) => new Line({
             readPixel: readPixel,
             color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
-            onBang: (v) => { 
+            trigger: (v) => { 
                 const { value, y, x } = v
               //  console.log('banging', v)
                // if(Math.random() < value)
               //   this.synth.trigger(1) 
               //this.midi.send(80 - i * 5)
-               this.midi.send(quantize(y/height, notes))
+               this.midi.note( quantize(1 - y/height, notes), 100, 100, i)
 
             },
             mode: "",
@@ -237,7 +237,6 @@ class CanvasRenderer {
        // this.ctx.fillStyle = line._shouldTrigger ? "#fff" :  line._strokeStyle
        this.ctx.fillStyle =  line._strokeStyle
        // line.lines.forEach((line) => {
-            const l = (1 - line.value) * 255
 
             if(line.points.length > 1) {
                  const points = line.points
@@ -247,10 +246,15 @@ class CanvasRenderer {
                      this.ctx.lineTo(point.x, point.y)
                  })
                  this.ctx.stroke()
+                // console.log('stroke is', line.stroke)
+                 this.ctx.fill(line.stroke)
              }
              if(line.marker !== null) {
+                const l = (line.value) * 255
+                const r = line._timeToNext/100
+                this.ctx.fillStyle =   `rgb(${l}, ${l}, ${l})`
                  const m = line.marker
-                 const w = line._didTrigger ? 90 : 20
+               const w = line._didTrigger ? 90 : 10               //const w = r
                  this.ctx.fillRect(m.x - w/2, m.y - w/2, w, w)
                  this.ctx.strokeRect(m.x - w/2, m.y - w/2, w, w)
                 // this.ctx.stroke()
