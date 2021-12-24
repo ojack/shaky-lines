@@ -4,6 +4,7 @@
  // - interval probability = sample at a specific interval, 
  // trigger at that interval with velocity corresponding to value
  // AND also probability according to the velocity
+ const Bus = require('nanobus')
 
  const { getStroke } = require('perfect-freehand')
 
@@ -23,12 +24,13 @@
     return d.join(' ')
   }
 
-module.exports = class Line {
+module.exports = class Line extends Bus {
     constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  trigger = () => {}, mode="" } = {}, i = 0) {
+        super()
         this.setInterval( interval )
         this.index = i
         this.color = color
-        this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
+        // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
         this.points = []
         this.marker = null
@@ -40,7 +42,7 @@ module.exports = class Line {
         this.stroke = null
 
         this.strokeOptions =  {
-            size: 18,
+            size: 12,
             thinning: 1.5,
             // smoothing: 0.2,
             // streamline: 0.0,
@@ -112,6 +114,7 @@ module.exports = class Line {
         const stroke = getStroke(this.points, this.strokeOptions)
         const path = getSvgPathFromStroke(stroke)
        this.stroke = new Path2D(path)
+       this.emit('update line', this.points)
       // console.log(stroke, path, this.stroke)
     }
 
@@ -121,7 +124,7 @@ module.exports = class Line {
         this.numTransforms = 0
     }
     stopRecording() {
-        console.log('points', this, this.points)
+       // console.log('points', this, this.points)
         const p = this.points
         this.isRecording = false
         this.duration =  p[p.length - 1].t
@@ -188,6 +191,7 @@ module.exports = class Line {
                     this._didTrigger = true
                     this._shouldTrigger = false
                     this._timeToNext = this.interval(this)
+                    this.emit('trigger', this)
                 }
                 this._bangTime = t
             }

@@ -5,9 +5,9 @@ const Synth = require('./tone.js')
 const colors = require('./colors.js')
 const MidiOut = require('./midi.js')
 const scale = require('./midi-scales.js')
+const { CanvasRenderer, BaseCanvas } = require('./canvas-renderer.js')
 
 const NUM_LINES = colors.length
-
 
 //window.scale = Scale
 const notes = scale("A3", "pentatonic", 3)
@@ -36,9 +36,10 @@ module.exports = class DrawSynth {
         baseCanvas.style.opacity = 0.1
 
         this.baseCanvas = new BaseCanvas(baseCanvas)
-
+        let renderer = new CanvasRenderer({ width, height})
+        this.renderer = renderer
         container.appendChild(baseCanvas)
-        container.appendChild(canvas)
+        container.appendChild(renderer.el)
 
 
         console.log(input, 'input')
@@ -57,7 +58,6 @@ module.exports = class DrawSynth {
        s0.init({ src: baseCanvas })
        src(s0).out()
 
-        let renderer = new CanvasRenderer(canvas)
 
         // read value at point from "input" canvas
         const pixels = new Uint8Array(4*1)
@@ -72,7 +72,7 @@ module.exports = class DrawSynth {
         }
 
         const bpm = 100
-        const division = 16
+        const division = 2
         const interval  = 60*1000/bpm
         console.log('interval', interval)
         this.lines = new Array(NUM_LINES).fill(0).map((_, i) => new Line({
@@ -89,8 +89,24 @@ module.exports = class DrawSynth {
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
-            interval: 250
+            interval: interval/division
         }))
+        
+        this.lines.forEach((line) => {
+            line.on('update line', (points) => {
+                console.log('line updated')
+                renderer.clearLines()
+                this.lines.forEach((line) => {
+                    //line.update(performance.now())
+                    renderer.drawLine(line)
+                })
+            })
+
+            line.on('trigger', () => {
+                console.log('triggering')
+                renderer.addPoint(line)
+            })
+        })
 
         this.lines.forEach((line, i) => {
             window[`p${i}`] = line})
@@ -102,9 +118,9 @@ module.exports = class DrawSynth {
         this.currLine = this.baseCanvas
 
         console.log('state', state)
-        canvas.style.border = "1px solid white"
-        canvas.style.touchAction = 'none'
-        canvas.addEventListener('pointerdown', (e) => {
+       renderer.el.style.border = "1px solid white"
+       renderer.el.style.touchAction = 'none'
+       renderer.el.addEventListener('pointerdown', (e) => {
             this.synth.start()
             e.target.setPointerCapture(e.pointerId)
            // console.log('curr line', this.currLine)
@@ -116,9 +132,9 @@ module.exports = class DrawSynth {
             console.log('pointer down',e )
          })
 
-        canvas.tabIndex = 0
+       renderer.el.tabIndex = 0
 
-        canvas.addEventListener('keydown', (e) => {
+       renderer.el.addEventListener('keydown', (e) => {
        //   console.log(e.key)
            if(isFinite(e.key)) {
                 // if(e.key === "0") {
@@ -132,7 +148,7 @@ module.exports = class DrawSynth {
            }
         })
 
-        canvas.addEventListener('pointermove', (e) => {
+       renderer.el.addEventListener('pointermove', (e) => {
             // console.log('pointer move', e)
             if (e.buttons !== 1) return
             this.currLine.addPoint({
@@ -143,7 +159,7 @@ module.exports = class DrawSynth {
            // this.currDrawing.render()
         })
       
-        canvas.addEventListener('pointerup', (e) => {
+       renderer.el.addEventListener('pointerup', (e) => {
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
@@ -160,8 +176,9 @@ module.exports = class DrawSynth {
             renderer.clear()
             this.lines.forEach((line) => {
                 line.update(performance.now())
-                renderer.draw(line)
+                if(line.marker !== null) renderer.drawMarker(line)
             })
+            renderer.update(dt)
         }).start()
 
          this.emit('draw:select',1)
@@ -190,80 +207,6 @@ module.exports = class DrawSynth {
     }
 }
 
-class BaseCanvas {
-    constructor(canvas) {
-        this.ctx = canvas.getContext('2d')
-        this.ctx.strokeStyle = "#fff"
-        this.ctx.lineWidth = 16
-        this.prevPoint = null
-    }
 
-    startRecording(){
-       // this.prevPoint = point
-    }
 
-    addPoint(point) {
-        if(this.prevPoint !== null) {
-            console.log('prev', point, this.prevPoint)
-            this.ctx.beginPath()
-            this.ctx.moveTo(this.prevPoint.x, this.prevPoint.y)
-            this.ctx.lineTo(point.x, point.y)
-            this.ctx.stroke()
-        }
-        this.prevPoint = point
-    }
 
-    stopRecording() {
-        this.prevPoint = null
-    }
-
-    clear() {
-
-    }
-}
-
-class CanvasRenderer {
-    constructor(canvas) {
-        this.canvas = canvas
-        this.ctx = canvas.getContext('2d')
-        this.ctx.strokeStyle = "#ed382b"
-        this.ctx.fillStyle = "#ed382b"
-        this.ctx.lineWidth = 3
-    }
-
-    draw(line) {
-        this.ctx.strokeStyle = line._strokeStyle
-        // this.ctx.fillStyle = `rgb(${l}, ${l}, ${l})`
-       // this.ctx.fillStyle = line._shouldTrigger ? "#fff" :  line._strokeStyle
-       this.ctx.fillStyle =  line._strokeStyle
-       // line.lines.forEach((line) => {
-
-            if(line.points.length > 1) {
-                 const points = line.points
-                 this.ctx.beginPath()
-                 this.ctx.moveTo(points[0].x, points[0].y)
-                 points.forEach((point) => {
-                     this.ctx.lineTo(point.x, point.y)
-                 })
-                 this.ctx.stroke()
-                // console.log('stroke is', line.stroke)
-                 this.ctx.fill(line.stroke)
-             }
-             if(line.marker !== null) {
-                const l = (line.value) * 255
-                const r = line._timeToNext/100
-                this.ctx.fillStyle =   `rgb(${l}, ${l}, ${l})`
-                 const m = line.marker
-               const w = line._didTrigger ? 90 : 10               //const w = r
-                 this.ctx.fillRect(m.x - w/2, m.y - w/2, w, w)
-                 this.ctx.strokeRect(m.x - w/2, m.y - w/2, w, w)
-                // this.ctx.stroke()
-             }
-       // })
-     
-    }
-
-    clear() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    }
-}

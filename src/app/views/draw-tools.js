@@ -1,13 +1,17 @@
 const html = require('choo/html')
 
 //     <div class="w2 h2 pa2"><div class="w1 h1 bg-white"></div></div>
+const colorString = (color) => {
+  console.log('color', color)
+  return color == null ? '#000' : `rgb(${color.r}, ${color.g}, ${color.b})`
+}
 
 module.exports = (state, emit) => {
   if(state.drawSynth) {
     console.log('DRAW', state.drawSynth)
     const lines = [{}].concat(state.drawSynth.lines)
     const lineButtons = html`<div class="flex"> ${lines.map((line, i) => html`
-    <div class=" w2 h2 pa2 b--white ${state.drawSynth.currIndex === i? "ba" : ""}" onclick=${() => emit('draw:select', i)} style="background-color:${line._strokeStyle}">
+    <div class=" w2 h2 pa2 b--white ${state.drawSynth.currIndex === i? "ba" : ""}" onclick=${() => emit('draw:select', i)} style="background-color:${colorString(line.color)}">
       ${i == 0?html`<div class="w1 h1 bg-white"></div>`: ''}
     </div>`)}</div>`
 
