@@ -55,8 +55,24 @@ module.exports = class DrawSynth {
         window.notes = notes
         window.midi = this.midi
 
-       s0.init({ src: baseCanvas })
-       src(s0).out()
+    //    s0.init({ src: baseCanvas })
+    //    src(s0).out()
+       s0.init({ src: window.lineCanvas })
+
+       speed = 0.4
+       
+       src(o0)
+       .hue(0.001)
+       .contrast(1.01)
+       .modulateHue(o0, 1)
+        .brightness(-0.001)
+        // .scrollY([-0.001, 0])
+          .scrollX([0, 0.001, 0, -0.001])
+          .scrollY(() => -0.01*window.p3.y/height)
+           .layer(
+                 src(s0)
+           )
+         .out()
 
 
         // read value at point from "input" canvas
@@ -79,12 +95,12 @@ module.exports = class DrawSynth {
             readPixel: readPixel,
             color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
             trigger: (v) => { 
-                const { value, y, x } = v
+                const { value, y, x, _timeToNext } = v
               //  console.log('banging', v)
                // if(Math.random() < value)
               //   this.synth.trigger(1) 
               //this.midi.send(80 - i * 5)
-               this.midi.note( quantize(1 - y/height, notes), 100, 100, i)
+               this.midi.note( quantize(1 - y/height, notes), 100, _timeToNext - 10, i)
 
             },
             mode: "",
@@ -103,7 +119,7 @@ module.exports = class DrawSynth {
             })
 
             line.on('trigger', () => {
-                console.log('triggering')
+                //console.log('triggering')
                 renderer.addPoint(line)
             })
         })

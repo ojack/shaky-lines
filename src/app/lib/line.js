@@ -33,6 +33,7 @@ module.exports = class Line extends Bus {
         // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
         this.points = []
+        this.smoothing = 0.8// how much to smooth speed values
         this.marker = null
         this.isRecording = true
         this._startTime = 0
@@ -42,8 +43,8 @@ module.exports = class Line extends Bus {
         this.stroke = null
 
         this.strokeOptions =  {
-            size: 12,
-            thinning: 1.5,
+            size: 16,
+            thinning:0.8,
             // smoothing: 0.2,
             // streamline: 0.0,
             start: { cap: false },
@@ -84,15 +85,26 @@ module.exports = class Line extends Bus {
     setInterval(i) {
         if (typeof i === 'function') {
             this.interval = i
+        } else if (i.constructor === Array) {
+            // choose randomly
+            this.interval = () => window.choose(i)     
         } else {
             this.interval = () => i
-        }
+        } 
     }
 
     set(props = {}){
         console.log('setting', props)
         if('trigger' in props) {
             this.trigger = props.trigger
+        }
+        if('strokeOptions' in props) {
+            this.strokeOptions = Object.assign({}, this.strokeOptions, props.strokeOptions)
+            this._updateLine()
+        }
+        if('smoothing' in props) {
+            this.smoothing = props.smoothing
+           // this.
         }
         if('interval' in props) {
            this.setInterval(props.interval)
@@ -105,17 +117,34 @@ module.exports = class Line extends Bus {
 
     addPoint (_p) {
       //  console.log(_p.t, _p, this, this.points)
-        const p = Object.assign({}, _p, { t: _p.t - this._startTime})
+        const p = Object.assign({}, _p, { t: _p.t - this._startTime, speed: 0})
+        if(this.points.length > 0) {
+            const prev = this.points[this.points.length - 1]
+            const a = p.x - prev.x
+            const b = p.y - prev.y
+            const distance = Math.sqrt(a*a + b*b)
+            const dt = p.t - prev.t
+            const speed = distance/dt
+
+            p.speed = prev.speed * this.smoothing + speed * (1 - this.smoothing)
+            console.log('speed', p.speed)
+        }
         this.points.push(p)
         this.marker = p
         this.x = this.marker.x
         this.y = this.marker.y
+        this.speed = this.marker.speed
+
         this.isRecording = true
+        this._updateLine()
+      // console.log(stroke, path, this.stroke)
+    }
+
+    _updateLine() {
         const stroke = getStroke(this.points, this.strokeOptions)
         const path = getSvgPathFromStroke(stroke)
        this.stroke = new Path2D(path)
        this.emit('update line', this.points)
-      // console.log(stroke, path, this.stroke)
     }
 
     startRecording(t) {
@@ -159,6 +188,7 @@ module.exports = class Line extends Bus {
             this.marker = point
             this.x = this.marker.x
             this.y = this.marker.y
+            this.speed = this.marker.speed
         }
     }
 

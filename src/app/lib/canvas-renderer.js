@@ -31,6 +31,8 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         this.lineCtx.fillStyle = "#ed382b"
         this.lineCtx.lineWidth = 3
 
+        window.lineCanvas = lineCanvas
+
         const pointCanvas = document.createElement('canvas')
         pointCanvas.width = width
         pointCanvas.height = height
@@ -56,7 +58,7 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         const {x, y, color, _timeToNext} = _point
         const point = Object.assign({}, { x, y, color, time: _timeToNext*2, length: _timeToNext})
         this.points.push(point)
-        console.log('points', this.points)
+        //console.log('points', this.points)
     }
 
     drawLine(line) {
@@ -67,15 +69,22 @@ module.exports.CanvasRenderer = class CanvasRenderer {
        // line.lines.forEach((line) => {
 
             if(line.points.length > 1) {
-                 const points = line.points
-                 this.lineCtx.beginPath()
-                 this.lineCtx.moveTo(points[0].x, points[0].y)
-                 points.forEach((point) => {
-                     this.lineCtx.lineTo(point.x, point.y)
-                 })
-                 this.lineCtx.stroke()
+                //  const points = line.points
+                //  this.lineCtx.beginPath()
+                //  this.lineCtx.moveTo(points[0].x, points[0].y)
+                //  points.forEach((point) => {
+                //      this.lineCtx.lineTo(point.x, point.y)
+                //  })
+                //  this.lineCtx.stroke()
                 // console.log('stroke is', line.stroke)
                  this.lineCtx.fill(line.stroke)
+
+                 // draw speed 
+                 this.lineCtx.fillStyle = "rgba(0, 255, 0, 0.4)"
+                 line.points.forEach((p) =>{
+                     const w = 1 + p.speed * 12
+                     this.lineCtx.fillRect(p.x - w/2, p.y - w/2, w, w)
+                 })
              }
     }
 
