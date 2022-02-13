@@ -1,6 +1,8 @@
 # [WIP] fubbles /// function scribbles
 freehand drawing editorand livecodable sequencer
 
+![screenshot of editor](assets/fubbles.png)
+
 The basic structure of this app is a drawing editor and a code editor within the same interface. Drawing with the mouse in the square on the left creates a set of x and y values in time. These values are looped in time, creating a repeating pattern.
 
 Various parameters of a drawing can be used as functions or lfos within a live-coded program. It can also be used to trigger discrete events such as a note on or note off event. Hydra is bundled within this app, but you can also use WebMidi to use fubbles as a control surface for another program, or load other javascript libraries to control sound directly.
