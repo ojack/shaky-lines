@@ -41,7 +41,11 @@ module.exports = class Editor extends Component {
         'Ctrl-S': (e) => { 
           console.log(e)
           //e.preventDefault()
+         
           this.emit('editor:save', this.cm.getValue()) 
+        }, 
+        'Ctrl-D': (e) => { 
+          this.emit('editor:download', this.cm.getValue()) 
         }
       }
     })

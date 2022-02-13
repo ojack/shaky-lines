@@ -1,6 +1,6 @@
 const html = require('choo/html')
 const Component = require('choo/component')
-const VideoGarden = require('../lib/video-garden.js')
+// const VideoGarden = require('../lib/video-garden.js')
 const DrawSynth = require('../lib/drawSynth.js')
 
 

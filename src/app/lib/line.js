@@ -40,6 +40,7 @@ module.exports = class Line extends Bus {
         this._timeToNext = interval
         this._timeSinceBang = 10000000
         this.duration = 0
+        this.muted = false
         this.stroke = null
 
         this.strokeOptions =  {
@@ -93,6 +94,10 @@ module.exports = class Line extends Bus {
         } 
     }
 
+    mute(b = true) {
+        this.muted = b
+    }
+
     set(props = {}){
         console.log('setting', props)
         if('trigger' in props) {
@@ -111,6 +116,9 @@ module.exports = class Line extends Bus {
         }
         if('mode' in props) {
             this.mode = props.mode
+        }
+        if('mute' in props) {
+            this.muted = props.mute
         }
         console.log(this)
     }
@@ -161,8 +169,10 @@ module.exports = class Line extends Bus {
     }
 
     clear() {
+        console.log('clearing!')
         this.points = []
         this.marker = null
+        this._updateLine()
     }
 
     _move(t) {
@@ -196,14 +206,16 @@ module.exports = class Line extends Bus {
         if(this.marker) {
             this.prevValue = this.value
             this.value = this._readPixel(this.marker.x, this.marker.y)
-            if(this.mode == "lumaTrigger"){
-                if(this._shouldTrigger === false) {
-                    this._shouldTrigger = this._checkLumaTrigger(this.prevValue, this.value)
+            if(!this.muted){
+                if(this.mode == "lumaTrigger"){
+                    if(this._shouldTrigger === false) {
+                        this._shouldTrigger = this._checkLumaTrigger(this.prevValue, this.value)
+                    }
+                } else {
+                    this._shouldTrigger = true
+                // this._bangTime = 0
+                // console.log('should trigger', this)
                 }
-            } else {
-                this._shouldTrigger = true
-               // this._bangTime = 0
-               // console.log('should trigger', this)
             }
             // this._shouldTrigger = true
         }

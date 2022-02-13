@@ -11,6 +11,8 @@ const NUM_LINES = colors.length
 
 //window.scale = Scale
 const notes = scale("A3", "pentatonic", 3)
+//const notes = scale("A3", "whole tone", 3)
+
 
 window.notes = notes
 window.quantize = (val = 0, arr = []) => arr[Math.floor(val*arr.length)]
@@ -151,7 +153,7 @@ module.exports = class DrawSynth {
        renderer.el.tabIndex = 0
 
        renderer.el.addEventListener('keydown', (e) => {
-       //   console.log(e.key)
+           console.log(e.key)
            if(isFinite(e.key)) {
                 // if(e.key === "0") {
                 //     this.currLine = this.baseCanvas
@@ -161,6 +163,9 @@ module.exports = class DrawSynth {
                     // this.selectLine(e.key)
                      this.emit('draw:select', e.key)
                // }
+           } else if (e.key == "Backspace") {
+               console.log('clearing', this.currLine)
+               this.currLine.clear()
            }
         })
 
