@@ -2,6 +2,7 @@ const Tone = require('tone')
 
 module.exports = class ToneSynth {
     constructor() {
+        window.Tone = Tone
         // const synth = new Tone.Synth().toDestination()
         // this.synth = synth
 

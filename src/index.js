@@ -19,7 +19,7 @@ css(`.styled-background {
 
 .CodeMirror-line span {
   pointer-events: all;
-  background: #fff;
+  /*background: #fff;*/
   padding: 2px;
 }
   `)

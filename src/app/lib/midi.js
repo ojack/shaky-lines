@@ -71,9 +71,10 @@ module.exports = class Midi extends Bus {
         }
     }
 
-    cc(controller = 0, val = 100) {
+    cc(controller = 0, val = 100, channel = 0) {
         if(this.currDevice!== null) {
-            this.outputs[this.currDevice].send([0xB0, controller, val])
+            const control = 0xB0
+            this.outputs[this.currDevice].send([control + channel, controller, val])
         }
     }
 

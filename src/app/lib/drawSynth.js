@@ -1,7 +1,7 @@
 const Line = require('./line.js')
 // const Line = require('./multi-line.js')
 const raf = require('raf-loop')
-const Synth = require('./tone.js')
+const Tone = require('./tone.js')
 const colors = require('./colors.js')
 const MidiOut = require('./midi.js')
 const scale = require('./midi-scales.js')
@@ -50,7 +50,7 @@ module.exports = class DrawSynth {
         this.emit = emit
         this.midi = new MidiOut()
 
-        this.synth = new Synth()
+        this.tone = new Tone()
 
 
         window.drawSynth = this
@@ -139,7 +139,7 @@ module.exports = class DrawSynth {
        renderer.el.style.border = "1px solid white"
        renderer.el.style.touchAction = 'none'
        renderer.el.addEventListener('pointerdown', (e) => {
-            this.synth.start()
+            this.tone.start()
             e.target.setPointerCapture(e.pointerId)
            // console.log('curr line', this.currLine)
             this.currLine.clear()
