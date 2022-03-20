@@ -24,6 +24,7 @@ module.exports.init = (el) => {
 
     const reverb = new Tone.Reverb()
     reverb.wet.value = 0
+    reverb.wet.value = 0.2
 
     delay.chain(reverb, Tone.Destination)
 
@@ -58,7 +59,8 @@ module.exports.init = (el) => {
             }
             this.audioParams = {}
             this._loop()
-            this.gain = new Tone.Gain(0.2).connect(delay)
+            this.mode = 
+            this.gain = new Tone.Gain(0.7).connect(delay)
             //new Array(numSamples).fill(0).map(() => new Tone.)
         }
 
@@ -71,14 +73,14 @@ module.exports.init = (el) => {
                     p[prop] = value()
                 })
                 p.start()
-                el.innerHTML += `playing [${index}] ${this.sounds[index].name}. `
+                el.innerHTML += `playing [${index}] ${this.sounds[index].name}. ${p.buffer.duration.toFixed(2)} `
                 el.scrollTop = el.scrollHeight;
             }
             this._loop()
         }
 
-        query(str = "bell", duration = [0, 1.5]) {
-            query({ query: str, minDuration: duration[0], maxDuration: duration[1] }, (sounds) => {
+        query(str = "bell", duration = [0, 1.5], pageSize = 5) {
+            query({ query: str, minDuration: duration[0], maxDuration: duration[1], pageSize: pageSize }, (sounds) => {
                 console.log('got sounds', sounds)
                 el.innerHTML += `loaded ${str} sounds`
                 sounds.results.forEach((sound, i) => {

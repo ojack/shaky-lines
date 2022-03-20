@@ -44,8 +44,10 @@ module.exports = class Line extends Bus {
         this.stroke = null
 
         this.strokeOptions =  {
-            size: 16,
-            thinning:0.8,
+           // size: 16,
+           size: 30,
+          //  thinning:0.8,
+          thinning: 2,
             // smoothing: 0.2,
             // streamline: 0.0,
             start: { cap: false },

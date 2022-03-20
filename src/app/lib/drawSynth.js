@@ -74,6 +74,7 @@ module.exports = class DrawSynth {
            .layer(
                  src(s0)
            )
+        .luma(0.1)
          .out()
 
 

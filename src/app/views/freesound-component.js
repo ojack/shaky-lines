@@ -24,6 +24,6 @@ module.exports = class FreesoundComponent extends Component {
   }
 
   createElement() {
-      return html`<div class="f5 white w-100 h-100 overflow-y-auto"></div>`
+      return html`<div class="f5 black w-100 h-100 overflow-y-auto"></div>`
   }
 }

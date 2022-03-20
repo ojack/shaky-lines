@@ -83,7 +83,7 @@ module.exports.CanvasRenderer = class CanvasRenderer {
                  this.lineCtx.fillStyle = "rgba(0, 255, 0, 0.4)"
                  line.points.forEach((p) =>{
                      const w = 1 + p.speed * 12
-                     this.lineCtx.fillRect(p.x - w/2, p.y - w/2, w, w)
+                   //  this.lineCtx.fillRect(p.x - w/2, p.y - w/2, w, w)
                  })
              }
     }
@@ -114,7 +114,7 @@ module.exports.CanvasRenderer = class CanvasRenderer {
                // this.pointCtx.fillStyle =   `rgba(${l}, ${l}, ${l}, 0)`
                  const m = line.marker
               // const w = line._didTrigger ? 90 : 10               //const w = r
-                const w = 8
+                const w = 20
                // console.log('drawing', line)
                 this.pointCtx.fillRect(m.x - w/2, m.y - w/2, w, w)
                //  this.pointCtx.strokeRect(m.x - w/2, m.y - w/2, w, w)
@@ -129,7 +129,7 @@ module.exports.CanvasRenderer = class CanvasRenderer {
             const w = 20 + point.length/15
             this.pointCtx.strokeStyle = colorString(point.color)
           //  console.log(point.x)
-           this.pointCtx.strokeRect(point.x - w/2, point.y - w/2, w, w)
+        //   this.pointCtx.strokeRect(point.x - w/2, point.y - w/2, w, w)
         //    this.pointCtx.beginPath();
         //    this.pointCtx.arc(point.x, point.y, w/2, 0, 2 * Math.PI);
         //    this.pointCtx.stroke();

@@ -1,5 +1,5 @@
 //var filter = "duration:[0%20TO%201.5]";
-var page_size = 5 //10;
+// var page_size = 5 //10;
 // available fields: https://freesound.org/docs/api/resources_apiv2.html#sound-instance-response
 var fields = "id,name,previews,license,username,description,created,analysis";
 var descriptors = "lowlevel.spectral_centroid.mean,lowlevel.pitch.mean,rhythm.bpm";
@@ -7,7 +7,7 @@ var descriptors = "lowlevel.spectral_centroid.mean,lowlevel.pitch.mean,rhythm.bp
 freesound.setToken("d31c795be3f70f7f04b21aeca4c5b48a599db6e9");
 
 // @todo: add pitch, duration, etc.
-module.exports.query =  function ({query = "bell", minDuration, maxDuration},callback) {
+module.exports.query =  function ({query = "bell", minDuration, maxDuration, pageSize = 5},callback) {
     console.log('querying', query)
     let filter = ''
     if(minDuration !== null) {
@@ -15,7 +15,7 @@ module.exports.query =  function ({query = "bell", minDuration, maxDuration},cal
     }
     freesound.textSearch(query, {page:1, filter:filter, 
         fields:fields, descriptors: descriptors, 
-         page_size:page_size, group_by_pack:1},
+         page_size:pageSize, group_by_pack:1},
          callback
          ,function(err){ console.log("Error while searching...", err)}
      );

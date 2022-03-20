@@ -3,13 +3,15 @@ const performance = require('./../performance/code-notes.js')
 module.exports = (state, emitter) => {
   // state.selected = null
   state.style = {
-    color0: "black",
+    // color0: "black",
+    // color1: "white",
+    color0: "pink",
+    color1: "black",
     // color1: "aquamarine"
-    color1: "white",
     // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
-    width: 800,
-    height: 800
+    width: 700,
+    height: 700
   }
   // state.renderer = {
   //   drawingMode: false
