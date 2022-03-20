@@ -15,7 +15,7 @@ module.exports = function mainView (state, emit) {
           <div class="absolute w-100 h-100">${state.cache(FreesoundComponent, 'freesound').render(state, emit)}</div>
           <div class=" absolute" id="fabric-container">${state.cache(CanvasExperiments, 'canvas-experiments').render({ width: state.style.width, height: state.style.width})}</div>
         </div>
-        <div class="flex-auto">
+        <div class="flex-auto flex flex-column-reverse">
           ${drawTools(state, emit)}
           ${state.cache(Editor, 'main-editor').render()}
 
