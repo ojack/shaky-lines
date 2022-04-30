@@ -2,6 +2,8 @@ const html = require('choo/html')
 const Component = require('choo/component')
 const fsl = require('./../lib/freesound/freesound-livecoding.js')
 
+const test = require('./../../performance/freesound-tests.js')
+
 module.exports = class FreesoundComponent extends Component {
     constructor(id, state, emit) {
         super(id)
@@ -16,6 +18,7 @@ module.exports = class FreesoundComponent extends Component {
 
   load(element) {
     fsl.init(element)
+    test()
   }
 
   update() {

@@ -5,13 +5,16 @@ module.exports = (state, emitter) => {
   state.style = {
     // color0: "black",
     // color1: "white",
-    color0: "pink",
+    //color0: "pink",
+    color0: "#faeb15",
     color1: "black",
     // color1: "aquamarine"
-    // width: window.innerWidth < 900 ? 400 : 800,
+   // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
-    width: 700,
-    height: 700
+    // width: window.innerWidth,
+    // height: window.innerHeight
+    width: 500,
+    height: 500
   }
   // state.renderer = {
   //   drawingMode: false

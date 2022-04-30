@@ -96,7 +96,8 @@ module.exports = class DrawSynth {
         console.log('interval', interval)
         this.lines = new Array(NUM_LINES).fill(0).map((_, i) => new Line({
             readPixel: readPixel,
-            color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
+            // color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
+            color: colors[i],
             trigger: (v) => { 
                 const { value, y, x, _timeToNext } = v
               //  console.log('banging', v)

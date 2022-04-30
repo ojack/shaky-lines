@@ -3,7 +3,9 @@ const html = require('choo/html')
 //     <div class="w2 h2 pa2"><div class="w1 h1 bg-white"></div></div>
 const colorString = (color) => {
   console.log('color', color)
-  return color == null ? '#000' : `rgb(${color.r}, ${color.g}, ${color.b})`
+  // return color == null ? '#000' : `rgb(${color.r}, ${color.g}, ${color.b})`
+  return color == null ? '#000' : `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+
 }
 
 module.exports = (state, emit) => {

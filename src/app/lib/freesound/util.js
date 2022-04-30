@@ -17,7 +17,7 @@ function euclid(steps,  pulses){
         }
     }
     const pat = storedRhythm.reverse()
-    console.log('pattern', pat)
+  //  console.log('pattern', pat)
     const dur = []
     let curr = 0
     let chunk = window.cycle / pat.length
@@ -30,7 +30,7 @@ function euclid(steps,  pulses){
         curr += chunk
     })
     dur.push(curr)
-    console.log(dur)
+ //   console.log(dur)
     return dur
 }
 
@@ -50,18 +50,20 @@ function rotateSeq(seq, rotate){
 // trans liberation / frequency to midi
 const ftm = (freq = 440) => 69 + 12 * Math.log2(freq / 440)
 
-const seq = (arr = []) => {
+const seq = (arr = [], dur = 1) => {
     let i = 0
     return (v) => {
       const curr = i
-      i++
+      i+= 1/dur
       if(i >= arr.length) i = 0
-      return arr[curr]
+      return arr[Math.floor(curr)]
     }
   }
 
   // weighted random
-const wrand = (outcomes = [], probabilities = []) => {
+const wrand = (outcomes = [], _prob = []) => {
+    const probabilities = outcomes.map((_, i) => _prob[i] ? _prob[i] : 1)
+  //  console.log('WRAND', probabilities, outcomes)
     const sum = probabilities.reduce((a, b) => a + b, 0)
     const scaledProbs = probabilities.map((p) => p/sum)
     const r = Math.random()

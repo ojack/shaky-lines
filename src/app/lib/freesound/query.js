@@ -1,7 +1,7 @@
 //var filter = "duration:[0%20TO%201.5]";
 // var page_size = 5 //10;
 // available fields: https://freesound.org/docs/api/resources_apiv2.html#sound-instance-response
-var fields = "id,name,previews,license,username,description,created,analysis";
+var fields = "id,name,previews,license,username,description,created,analysis,ac_analysis";
 var descriptors = "lowlevel.spectral_centroid.mean,lowlevel.pitch.mean,rhythm.bpm";
 
 freesound.setToken("d31c795be3f70f7f04b21aeca4c5b48a599db6e9");
@@ -12,13 +12,26 @@ module.exports.query =  function ({query = "bell", minDuration, maxDuration, pag
     let filter = ''
     if(minDuration !== null) {
         filter += `duration:[${minDuration}%20TO%20${maxDuration}]`
+        // filter+= `%20ac_note_midi:60`
     }
     freesound.textSearch(query, {page:1, filter:filter, 
-        fields:fields, descriptors: descriptors, 
-         page_size:pageSize, group_by_pack:1},
+        fields:fields, 
+       // descriptors_filter: 'lowlevel.pitch.mean:[219.9 TO 220.1]',
+      // target: "lowlevel.pitch.mean:220",
+        descriptors: descriptors, 
+         page_size:pageSize, 
+         group_by_pack:1},
          callback
          ,function(err){ console.log("Error while searching...", err)}
      );
+}
+
+module.exports.loadSimilar = (sound, success, error) => {
+    sound.getSimilar(success, error, {
+        fields: fields,
+        descriptors: descriptors,
+        page_size: 5
+    })
 }
 
 

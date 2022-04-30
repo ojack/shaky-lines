@@ -21,7 +21,8 @@ module.exports = class Editor extends Component {
     this.local.show = state.panels.editor
     // hacky way of accessing events
     state.editor = this
-    this.fontSize = 18
+    //this.fontSize = 18
+    this.fontSize = 24
     this.emit = emit
     this.eval = repl.eval
   }
@@ -63,6 +64,8 @@ module.exports = class Editor extends Component {
     console.log(this.cm)
     this.cm.setValue('//')
     this.updateVisibility()
+    this.zoom(1)
+
   }
 
   zoom(direction = 1) {

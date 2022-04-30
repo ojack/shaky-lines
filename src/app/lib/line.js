@@ -6,6 +6,8 @@
  // AND also probability according to the velocity
  const Bus = require('nanobus')
 
+ const chroma = require('chroma-js')
+
  const { getStroke } = require('perfect-freehand')
 
  function getSvgPathFromStroke(stroke) {
@@ -30,6 +32,7 @@ module.exports = class Line extends Bus {
         this.setInterval( interval )
         this.index = i
         this.color = color
+        this.strokeStyle = `rgb(${color[0], color[1], color[2]})`
         // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
         this.points = []
@@ -102,26 +105,34 @@ module.exports = class Line extends Bus {
 
     set(props = {}){
         console.log('setting', props)
-        if('trigger' in props) {
-            this.trigger = props.trigger
-        }
-        if('strokeOptions' in props) {
-            this.strokeOptions = Object.assign({}, this.strokeOptions, props.strokeOptions)
-            this._updateLine()
-        }
-        if('smoothing' in props) {
-            this.smoothing = props.smoothing
-           // this.
-        }
-        if('interval' in props) {
-           this.setInterval(props.interval)
-        }
-        if('mode' in props) {
-            this.mode = props.mode
-        }
-        if('mute' in props) {
-            this.muted = props.mute
-        }
+        Object.keys(props).forEach((prop) => {
+            if(prop === 'trigger') {
+                this.trigger = props.trigger
+            } else if(prop === 'color') {
+                if(chroma.valid(props.color)) {
+                    this.color = chroma(props.color).rgb()
+                    console.log('changed color to', this.color)
+                    this._updateLine()
+                }
+            } else if(prop === 'strokeOptions') {
+                this.strokeOptions = Object.assign({}, this.strokeOptions, props.strokeOptions)
+                this._updateLine()
+            } else if(prop === 'smoothing') {
+                this.smoothing = props.smoothing
+               // this.
+            } else if(prop === 'interval') {
+               this.setInterval(props.interval)
+            } else if(prop === 'mode') {
+                this.mode = props.mode
+            } else if(prop === 'mute') {
+                this.muted = props.mute
+            } else {
+                this[prop] = props[prop]
+                // this._updateLine()
+                this.emit('update line', this.points)
+            }
+        })
+       
         console.log(this)
     }
 
