@@ -75,14 +75,14 @@ module.exports.CanvasRenderer = class CanvasRenderer {
 
                 if (prop in line) {
                     this.lineCtx[prop] = line[prop]
-                    console.log(prop, prop in line, line, this.lineCtx)
+                   // console.log(prop, prop in line, line, this.lineCtx)
                 }
             })
         //    if('fillStyle' in line) this.lineCtx.fillStyle = line.fillStyle
         //    if('lineWidth' in line) this.lineCtx.lineWidth = line.lineWidth
         // line.lines.forEach((line) => {
 
-        if (line.points.length > 1) {
+        if (line.currStroke.points.length > 1) {
             //  const points = line.points
             //  this.lineCtx.beginPath()
             //  this.lineCtx.moveTo(points[0].x, points[0].y)
@@ -91,14 +91,14 @@ module.exports.CanvasRenderer = class CanvasRenderer {
             //  })
             //  this.lineCtx.stroke()
             // console.log('stroke is', line.stroke)
-            this.lineCtx.fill(line.stroke)
+            this.lineCtx.fill(line.currStroke.stroke)
 
             this.lineCtx.globalAlpha = 1.0
-            this.lineCtx.stroke(line.stroke)
+            this.lineCtx.stroke(line.currStroke.stroke)
 
             // draw speed 
             this.lineCtx.fillStyle = "rgba(0, 255, 0, 0.4)"
-            line.points.forEach((p) => {
+            line.currStroke.points.forEach((p) => {
                 const w = 1 + p.speed * 12
                 //  this.lineCtx.fillRect(p.x - w/2, p.y - w/2, w, w)
             })
@@ -187,7 +187,7 @@ module.exports.BaseCanvas = class BaseCanvas {
 
     addPoint(point) {
         if (this.prevPoint !== null) {
-            console.log('prev', point, this.prevPoint)
+           // console.log('prev', point, this.prevPoint)
             this.ctx.beginPath()
             this.ctx.moveTo(this.prevPoint.x, this.prevPoint.y)
             this.ctx.lineTo(point.x, point.y)

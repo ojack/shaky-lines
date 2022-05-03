@@ -35,7 +35,18 @@ module.exports = class Line extends Bus {
         this.strokeStyle = `rgb(${color[0], color[1], color[2]})`
         // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
-        this.points = []
+
+        this.strokes = [] // new object that will hold a stroke = { points: [..], stroke: ... }
+
+        // old stroke and points
+        // this.points = []
+        // this.stroke = null
+
+        this.currStroke = {
+            points: [],
+            stroke: null
+        }
+
         this.smoothing = 0.8// how much to smooth speed values
         this.marker = null
         this.isRecording = true
@@ -44,7 +55,6 @@ module.exports = class Line extends Bus {
         this._timeSinceBang = 10000000
         this.duration = 0
         this.muted = false
-        this.stroke = null
 
         this.strokeOptions =  {
            // size: 16,
@@ -129,18 +139,34 @@ module.exports = class Line extends Bus {
             } else {
                 this[prop] = props[prop]
                 // this._updateLine()
-                this.emit('update line', this.points)
+                this.emit('update line', this.currStroke.points)
             }
         })
        
-        console.log(this)
+        // console.log(this)
+    }
+
+    newStroke(time) {
+        console.log('created new stroke', this.strokes)
+        if(this.strokes.length <= 0) this.startRecording(time)
+        const currStroke = {
+            points: [],
+            stroke: null
+        }
+        this.strokes.push(currStroke)
+        this.currStroke = currStroke
     }
 
     addPoint (_p) {
       //  console.log(_p.t, _p, this, this.points)
+        // let currStroke = this.strokes[this.strokes.length - 1]
+       
+        // const c
+        let points = this.currStroke.points
+
         const p = Object.assign({}, _p, { t: _p.t - this._startTime, speed: 0})
-        if(this.points.length > 0) {
-            const prev = this.points[this.points.length - 1]
+        if(points.length > 0) {
+            const prev = points[points.length - 1]
             const a = p.x - prev.x
             const b = p.y - prev.y
             const distance = Math.sqrt(a*a + b*b)
@@ -148,24 +174,28 @@ module.exports = class Line extends Bus {
             const speed = distance/dt
 
             p.speed = prev.speed * this.smoothing + speed * (1 - this.smoothing)
-            console.log('speed', p.speed)
+          //  console.log('speed', p.speed)
         }
-        this.points.push(p)
+        points.push(p)
         this.marker = p
         this.x = this.marker.x
         this.y = this.marker.y
         this.speed = this.marker.speed
 
         this.isRecording = true
+
+        // console.log('adding points', points, this.strokes)
         this._updateLine()
       // console.log(stroke, path, this.stroke)
     }
 
     _updateLine() {
-        const stroke = getStroke(this.points, this.strokeOptions)
+        const stroke = getStroke(this.currStroke.points, this.strokeOptions)
         const path = getSvgPathFromStroke(stroke)
-       this.stroke = new Path2D(path)
-       this.emit('update line', this.points)
+       this.currStroke.stroke = new Path2D(path)
+       this.emit('update line', this.currStroke.points)
+
+       //this.stroke = this.currStroke.stroke
     }
 
     startRecording(t) {
@@ -173,23 +203,25 @@ module.exports = class Line extends Bus {
        // this._bangTime = this._startTime
         this.numTransforms = 0
     }
+
     stopRecording() {
        // console.log('points', this, this.points)
-        const p = this.points
+       
+        const p = this.currStroke.points
         this.isRecording = false
         this.duration =  p[p.length - 1].t
-        console.log(this._startTime, this.duration, this)
+        // console.log(this._startTime, this.duration, this)
     }
 
     clear() {
         console.log('clearing!')
-        this.points = []
+        this.currStroke.points = []
         this.marker = null
         this._updateLine()
     }
 
     _move(t) {
-        if(!this.isRecording && this.points.length > 1) {
+        if(!this.isRecording && this.currStroke.points.length > 1) {
           
             // const start = p[0].t
             // const dur = end - start
@@ -199,7 +231,7 @@ module.exports = class Line extends Bus {
                 const numReps = Math.floor((t- this._startTime)/this.duration)
                 if(numReps > this.numTransforms) this._transformPath()
             }
-            const p = this.points
+            const p = this.currStroke.points
             
             let index = 0
             let time = p[index].t
@@ -263,16 +295,16 @@ module.exports = class Line extends Bus {
 
     // for continuous animation, update point when reaches end
     _transformPath() {
-        const points = this.points
+        const points = this.currStroke.points
         const end = points[points.length - 1]
         const start = points[0]
 
-        const newPoints = this.points.map((p) => Object.assign({}, p, {
+        const newPoints = this.currStroke.points.map((p) => Object.assign({}, p, {
             x: (end.x + (p.x-start.x))%800,
             y: (end.y + (p.y-start.y))%800
         }))
 
-        this.points = newPoints
+        this.currStroke.points = newPoints
         this.numTransforms ++
     }
 }
