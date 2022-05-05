@@ -36,7 +36,7 @@ module.exports = class Line extends Bus {
         // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
 
-        this.strokes = [] // new object that will hold a stroke = { points: [..], stroke: ... }
+        // this.strokes = [] // new object that will hold a stroke = { points: [..], stroke: ... }
 
         // old stroke and points
         // this.points = []
@@ -204,7 +204,7 @@ module.exports = class Line extends Bus {
 
     clear() {
         // console.log('clearing!')
-        this.points = []
+        this.currStroke.points = []
         this.marker = null
         this._updateLine()
     }
