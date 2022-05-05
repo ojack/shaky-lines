@@ -1,14 +1,16 @@
 
+module.exports = {
+stroke: `
 // change stroke
-p0.set({
-    strokeOptions: { 
-      size: 60, 
-      thinning: 2, 
-      smoothing: 0, 
-      streamline: 0 }
-  })
-
-
+    p0.set({
+        strokeOptions: { 
+        size: 60, 
+        thinning: 2, 
+        smoothing: 0, 
+        streamline: 0 }
+    })
+ `,
+tonejs: `
 notes = scale("A3", "pentatonic", 3)
 p0.set({
     trigger: (v) => { 
@@ -18,3 +20,5 @@ p0.set({
     },
     interval: 200
 })
+`
+}

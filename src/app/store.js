@@ -1,4 +1,5 @@
 const performance = require('./../performance/code-notes.js')
+const examples = require('./examples.js')
 
 module.exports = (state, emitter) => {
   // state.selected = null
@@ -9,7 +10,7 @@ module.exports = (state, emitter) => {
     // color0: "#faeb15",
     // color1: "black",
     // color1: "aquamarine"
-   width: window.innerWidth < 900 ? 400 : 800,
+    width: window.innerWidth < 900 ? 400 : 800,
     height: window.innerWidth < 900 ? 400 : 800
     // width: window.innerWidth,
     // height: window.innerHeight
@@ -56,7 +57,7 @@ module.exports = (state, emitter) => {
     emitter.emit('render')
   })
 
-  emitter.on('midi:select', (i) =>{
+  emitter.on('midi:select', (i) => {
     console.log('selected midi', i)
     state.drawSynth.midi.select(parseFloat(i))
     emitter.emit('render')
@@ -69,7 +70,7 @@ module.exports = (state, emitter) => {
   })
 
   emitter.on('sketches:toggle', () => {
-    state.sketches.visible =! state.sketches.visible
+    state.sketches.visible = !state.sketches.visible
     emitter.emit('render')
   })
 
@@ -88,7 +89,7 @@ module.exports = (state, emitter) => {
   emitter.on('editor:download', (code) => {
     screencap()
     const text = code
-    const data = new Blob([text], {type: 'text/plain'});
+    const data = new Blob([text], { type: 'text/plain' });
     const a = document.createElement('a')
     a.style.display = 'none'
     let d = new Date()
@@ -113,34 +114,36 @@ module.exports = (state, emitter) => {
     localStorage.setItem("spiral-synth", JSON.stringify(state.sketches.all))
 
     emitter.emit('render')
-   // const p = localStorage.getItem('spiral-synth')
+    // const p = localStorage.getItem('spiral-synth')
     // if(p) {
     //   const presets =  JSON.parse(p)
     //   console.log('got presets!', presets)
     // }
-    
+
   })
 
+  state.sketches.all = examples
 
   const p = localStorage.getItem('spiral-synth')
-  if(p) {
-    state.sketches.all =  JSON.parse(p)
-   // state.presets.all = presets
-    // state.presets.all = presets.map((_p, i) => ({
-    //   name: _p.name,
-    //   code: _p.code
-    // }))
-    // console.log('got presets!', presets)
-    //state.sketches = JSON.parse(p)
+  if (p) {
+    state.sketches.all = Object.assign({}, state.sketches.all, JSON.parse(p))
+  //   // state.presets.all = presets
+  //   // state.presets.all = presets.map((_p, i) => ({
+  //   //   name: _p.name,
+  //   //   code: _p.code
+  //   // }))
+  //   // console.log('got presets!', presets)
+  //   //state.sketches = JSON.parse(p)
   }
+
 
   emitter.on('DOMContentLoaded', () => {
     console.log('dom loaded!')
-   // loadPreset(0)
+    // loadPreset(0)
 
     state.drawSynth.midi.on('device update', (inputs, outputs) => {
       emitter.emit('render')
-   })
+    })
   })
 
   function loadCode(key) {
@@ -150,7 +153,7 @@ module.exports = (state, emitter) => {
     // state.presets.name = p.name
     state.editor.cm.setValue(state.sketches.all[key])
     emitter.emit('render')
-   // state.editor.eval(code)
+    // state.editor.eval(code)
   }
   // function loadPreset(index) {
   //   state.presets.selected = index
@@ -172,10 +175,10 @@ module.exports = (state, emitter) => {
 
 
 
-  emitter.on('toggle', (prop, type="panels") => {
-    state[type][prop]  =! state[type][prop]
+  emitter.on('toggle', (prop, type = "panels") => {
+    state[type][prop] = !state[type][prop]
     emitter.emit('render')
-    if(type== "renderer"){
+    if (type == "renderer") {
       emitter.emit(`renderer: toggle ${prop}`, state[type][prop])
     }
   })
@@ -187,7 +190,7 @@ module.exports = (state, emitter) => {
     // state.fabric.canvas.getActiveObjects().forEach((obj) => {
     //   state.fabric.canvas.remove(obj)
     // })
-    if(state.selected!== null) {
+    if (state.selected !== null) {
       // // if camera or screenshare, stop tracks
       // if(state.selected._originalElement && state.selected._originalElement.srcObject) {
       //   if (state.selected._originalElement.srcObject.getTracks) {
