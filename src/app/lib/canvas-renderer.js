@@ -64,10 +64,16 @@ module.exports.CanvasRenderer = class CanvasRenderer {
 
     drawLine(line) {
         this.lineCtx.save()
-        this.lineCtx.strokeStyle = colorString(line.color)
+        // this.lineCtx.strokeStyle = colorString(line.strokeParams.color)
         // this.lineCtx.fillStyle = `rgb(${l}, ${l}, ${l})`
         // this.lineCtx.fillStyle = line._shouldTrigger ? "#fff" :  line._strokeStyle
-        this.lineCtx.fillStyle = colorString(line.color)
+       // this.lineCtx.fillStyle = colorString(line.color)
+
+        this.lineCtx.fillStyle = colorString(line.strokeParams.color)
+        // console.log('drawing line', line.strokeParams.color)
+
+        this.lineCtx.globalCompositeOperation = line.strokeParams.blending
+        this.lineCtx.globalAlpha = line.strokeParams.alpha
 
         const props = ['fillStyle', 'lineWidth', 'strokeStyle', 'globalCompositeOperation', 'globalAlpha']
         props.forEach(
@@ -110,41 +116,26 @@ module.exports.CanvasRenderer = class CanvasRenderer {
     }
 
     drawMarker(line) {
-        //  console.log('drawing marker', line)
-        //     this.lineCtx.strokeStyle = colorString(line.color)
-        //     // this.lineCtx.fillStyle = `rgb(${l}, ${l}, ${l})`
-        //    // this.lineCtx.fillStyle = line._shouldTrigger ? "#fff" :  line._strokeStyle
-        //    this.lineCtx.fillStyle =  colorString(line.color)
-        //    // line.lines.forEach((line) => {
+        this.pointCtx.save()
 
-        //         if(line.points.length > 1) {
-        //              const points = line.points
-        //              this.lineCtx.beginPath()
-        //              this.lineCtx.moveTo(points[0].x, points[0].y)
-        //              points.forEach((point) => {
-        //                  this.lineCtx.lineTo(point.x, point.y)
-        //              })
-        //              this.lineCtx.stroke()
-        //             // console.log('stroke is', line.stroke)
-        //              this.lineCtx.fill(line.stroke)
-        //          }
-        // if(line.marker !== null) {
-        //  const l = (line.value) * 255
-        // const r = line._timeToNext/100
-        // this.pointCtx.fillStyle = "#000"
-
-        this.pointCtx.fillStyle = "#000"
-        // this.pointCtx.fillStyle =   `rgba(${l}, ${l}, ${l}, 0)`
+       // this.pointCtx.fillStyle = "#000"
+        this.pointCtx.fillStyle = colorString(line.markerParams.color)
+        // line.pointCtx.fillStyle =   `rgba(${l}, ${l}, ${l}, 0)`
         const m = line.marker
         // const w = line._didTrigger ? 90 : 10               //const w = r
-        const w = 20 + line.speed * 4
+       // const w = 20 + line.speed * 4
+       const w = line.markerParams.width
+       const h= line.markerParams.height
+
+       this.pointCtx.globalCompositeOperation = line.markerParams.blending
+       this.pointCtx.globalAlpha = line.markerParams.alpha
         // console.log('drawing', line)
-        this.pointCtx.fillRect(m.x - w / 2, m.y - w / 2, w, w)
+        this.pointCtx.fillRect(m.x - w / 2, m.y - h / 2, w, h)
         //  this.pointCtx.strokeRect(m.x - w/2, m.y - w/2, w, w)
         // this.ctx.stroke()
         //  }
         // })
-
+        this.pointCtx.restore()
     }
 
     update(dt) {

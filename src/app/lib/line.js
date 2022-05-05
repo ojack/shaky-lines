@@ -7,6 +7,9 @@
  const Bus = require('nanobus')
 
  const chroma = require('chroma-js')
+ const util = require('./freesound/util.js')
+
+ const { ftm, wrand, euclid, seq } = util
 
  const { getStroke } = require('perfect-freehand')
 
@@ -28,7 +31,7 @@
 
 const formatParams = (value) => {
     if (typeof value === "function") return value
-    if (Array.isArray(value)) return choose(value)
+    if (Array.isArray(value)) return seq(value)
     return () => value
 }
 
@@ -63,10 +66,11 @@ module.exports = class Line extends Bus {
         this.muted = false
 
         // new container for 
-        this.strokeProps = {
+        this.strokeParams = {
             dynamic: {}, // contains properties that will be continuously updated
             color: this.color,
             alpha: 1,
+            blending: 'source-over',
             options:  {
                 // size: 16,
                 size: 30,
@@ -81,6 +85,16 @@ module.exports = class Line extends Bus {
                      },
                  // simulatePressure: false // uncomment to use with tablet
                }
+        }
+
+        this.markerParams = {
+            color: [0, 0, 0],
+            width: 20,
+            height: 20,
+            alpha: 1,
+            blending: 'source-over',
+            dynamic: {}, // updated on each trigger
+            continuous: {} // updated continuously
         }
 
         // this.strokeOptions =  {
@@ -140,6 +154,8 @@ module.exports = class Line extends Bus {
         this.muted = b
     }
 
+
+
     set(props = {}){
         // console.log('setting', props)
         Object.keys(props).forEach((prop) => {
@@ -152,7 +168,7 @@ module.exports = class Line extends Bus {
                     this._updateLine()
                 }
             } else if(prop === 'strokeOptions') {
-                this.strokeProps.options = Object.assign({}, this.strokeProps.options, props.strokeOptions)
+                this.strokeParams.options = Object.assign({}, this.strokeParams.options, props.strokeOptions)
                 this._updateLine()
             } else if(prop === 'smoothing') {
                 this.smoothing = props.smoothing
@@ -173,8 +189,30 @@ module.exports = class Line extends Bus {
         // console.log(this)
     }
 
-    setStroke(props = {}) {
+    setStroke(params = {}) {
+        Object.entries(params).forEach(([method, value]) => {
+            if (method === "options") {
+                this.strokeParams.options = Object.assign({}, this.strokeParams.options,value)
+                this._updateLine()
+            } else {
+                this.strokeParams.dynamic[method] = formatParams(value)
+            }
+        })
+    }
 
+    setMarker(params = {}) {
+        Object.entries(params).forEach(([method, value]) => {
+            if (typeof value === "function") {
+                this.markerParams.continuous[method] = value
+                delete this.markerParams.dynamic[method]
+            } else if (Array.isArray(value)) {
+                this.markerParams.dynamic[method] = seq(value)
+                delete this.markerParams.continuous[method]
+            } else {
+                this.markerParams.dynamic[method] = () => value
+                delete this.markerParams.continuous[method]
+            }
+        })
     }
 
     addPoint (_p) {
@@ -210,7 +248,7 @@ module.exports = class Line extends Bus {
     }
 
     _updateLine() {
-        const stroke = getStroke(this.currStroke.points, this.strokeProps.options)
+        const stroke = getStroke(this.currStroke.points, this.strokeParams.options)
         const path = getSvgPathFromStroke(stroke)
        this.currStroke.stroke = new Path2D(path)
        this.emit('update line', this.currStroke.points)
@@ -271,6 +309,14 @@ module.exports = class Line extends Bus {
         if(this.marker) {
             this.prevValue = this.value
             this.value = this._readPixel(this.marker.x, this.marker.y)
+            Object.entries(this.markerParams.continuous).forEach(([prop, value]) => {
+                if(prop === 'color') {
+                    this.markerParams[prop] = chroma(value()).rgb()
+                } else {
+                    this.markerParams[prop] = value()
+                }
+                // console.log('value is ', this.strokeParams[prop])
+            })
             if(!this.muted){
                 if(this.mode == "lumaTrigger"){
                     if(this._shouldTrigger === false) {
@@ -294,6 +340,24 @@ module.exports = class Line extends Bus {
            
             if(t - this._bangTime >= this._timeToNext) {
                if(this._shouldTrigger) {
+                    const dynamicStrokeProps = Object.entries(this.strokeParams.dynamic)
+                    dynamicStrokeProps.forEach(([prop, value]) => {
+                        if(prop === 'color') {
+                            this.strokeParams[prop] = chroma(value()).rgb()
+                        } else {
+                            this.strokeParams[prop] = value()
+                        }
+                        // console.log('value is ', this.strokeParams[prop])
+                    })
+                    Object.entries(this.markerParams.dynamic).forEach(([prop, value]) => {
+                        if(prop === 'color') {
+                            this.markerParams[prop] = chroma(value()).rgb()
+                        } else {
+                            this.markerParams[prop] = value()
+                        }
+                        // console.log('value is ', this.strokeParams[prop])
+                    })
+                    if(dynamicStrokeProps.length > 0) this.emit('update line', this.currStroke.points)
                     this.trigger(this)
                     this._didTrigger = true
                     this._shouldTrigger = false
