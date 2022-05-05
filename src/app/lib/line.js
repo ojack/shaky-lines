@@ -47,7 +47,7 @@ module.exports = class Line extends Bus {
             stroke: null
         }
 
-        this.smoothing = 0.8// how much to smooth speed values
+        this.smoothing = 0.96// how much to smooth speed values
         this.marker = null
         this.isRecording = true
         this._startTime = 0
@@ -174,7 +174,7 @@ module.exports = class Line extends Bus {
         this.isRecording = true
 
         // console.log('adding points', points, this.strokes)
-        this._updateLine()
+       if(points.length % 2 === 0) this._updateLine()
       // console.log(stroke, path, this.stroke)
     }
 
@@ -195,7 +195,7 @@ module.exports = class Line extends Bus {
 
     stopRecording() {
        // console.log('points', this, this.points)
-       
+       this._updateLine()
         const p = this.currStroke.points
         this.isRecording = false
         this.duration =  p[p.length - 1].t

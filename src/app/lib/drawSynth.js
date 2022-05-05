@@ -134,6 +134,7 @@ module.exports = class DrawSynth {
         })
 
         this.lines.forEach((line, i) => {
+            window[`f${i}`] = line
             window[`p${i}`] = line
         })
         this.currIndex = 0
