@@ -26,6 +26,12 @@
     return d.join(' ')
   }
 
+const formatParams = (value) => {
+    if (typeof value === "function") return value
+    if (Array.isArray(value)) return choose(value)
+    return () => value
+}
+
 module.exports = class Line extends Bus {
     constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  trigger = () => {}, mode="" } = {}, i = 0) {
         super()
@@ -56,20 +62,41 @@ module.exports = class Line extends Bus {
         this.duration = 0
         this.muted = false
 
-        this.strokeOptions =  {
-           // size: 16,
-           size: 30,
-          //  thinning:0.8,
-          thinning: 2,
-            // smoothing: 0.2,
-            // streamline: 0.0,
-            start: { cap: false },
-             end: { 
-                 cap: false,
-                 taper: 0 
-                },
-            // simulatePressure: false // uncomment to use with tablet
-          }
+        // new container for 
+        this.strokeProps = {
+            dynamic: {}, // contains properties that will be continuously updated
+            color: this.color,
+            alpha: 1,
+            options:  {
+                // size: 16,
+                size: 30,
+               //  thinning:0.8,
+               thinning: 2,
+                 // smoothing: 0.2,
+                 // streamline: 0.0,
+                 start: { cap: false },
+                  end: { 
+                      cap: false,
+                      taper: 0 
+                     },
+                 // simulatePressure: false // uncomment to use with tablet
+               }
+        }
+
+        // this.strokeOptions =  {
+        //    // size: 16,
+        //    size: 30,
+        //   //  thinning:0.8,
+        //   thinning: 2,
+        //     // smoothing: 0.2,
+        //     // streamline: 0.0,
+        //     start: { cap: false },
+        //      end: { 
+        //          cap: false,
+        //          taper: 0 
+        //         },
+        //     // simulatePressure: false // uncomment to use with tablet
+        //   }
 
         // trigger mode
         this.mode = mode
@@ -125,7 +152,7 @@ module.exports = class Line extends Bus {
                     this._updateLine()
                 }
             } else if(prop === 'strokeOptions') {
-                this.strokeOptions = Object.assign({}, this.strokeOptions, props.strokeOptions)
+                this.strokeProps.options = Object.assign({}, this.strokeProps.options, props.strokeOptions)
                 this._updateLine()
             } else if(prop === 'smoothing') {
                 this.smoothing = props.smoothing
@@ -144,6 +171,10 @@ module.exports = class Line extends Bus {
         })
        
         // console.log(this)
+    }
+
+    setStroke(props = {}) {
+
     }
 
     addPoint (_p) {
@@ -179,7 +210,7 @@ module.exports = class Line extends Bus {
     }
 
     _updateLine() {
-        const stroke = getStroke(this.currStroke.points, this.strokeOptions)
+        const stroke = getStroke(this.currStroke.points, this.strokeProps.options)
         const path = getSvgPathFromStroke(stroke)
        this.currStroke.stroke = new Path2D(path)
        this.emit('update line', this.currStroke.points)
