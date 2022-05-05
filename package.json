@@ -8,7 +8,7 @@
     "watch": "watchify -p esmify -d src/index.js -o dist/bundle.js -v -t [ babelify --presets [ @babel/preset-env ] --plugins [@babel/plugin-transform-runtime]",
     "server": "live-server dist --https=certs/ssl.js --cors",
     "start": "npm run watch & npm run server",
-    "publish": "git subtree push --prefix=dist git@github.com:ojack/spirals.git main"
+    "publish": "git subtree push --prefix=dist git@github.com:ojack/fubbles.git main"
   },
   "author": "ojack",
   "license": "ISC",
