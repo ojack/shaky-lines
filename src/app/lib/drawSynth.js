@@ -15,7 +15,10 @@ const notes = scale("A3", "pentatonic", 3)
 
 
 window.notes = notes
-window.quantize = (val = 0, arr = []) => arr[Math.floor(val*arr.length)]
+window.quantize = (val = 0, arr = []) => {
+    const v = Math.max(0, Math.min(0.9999999999, val))
+    return arr[Math.floor(v*arr.length)]
+}
 window.choose = (arr) => arr[Math.floor(Math.random()*arr.length)]
 // console.log('NOTES', notes)
 

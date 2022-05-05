@@ -114,14 +114,14 @@ module.exports = class Line extends Bus {
     }
 
     set(props = {}){
-        console.log('setting', props)
+        // console.log('setting', props)
         Object.keys(props).forEach((prop) => {
             if(prop === 'trigger') {
                 this.trigger = props.trigger
             } else if(prop === 'color') {
                 if(chroma.valid(props.color)) {
                     this.color = chroma(props.color).rgb()
-                    console.log('changed color to', this.color)
+                    // console.log('changed color to', this.color)
                     this._updateLine()
                 }
             } else if(prop === 'strokeOptions') {
@@ -146,17 +146,6 @@ module.exports = class Line extends Bus {
         // console.log(this)
     }
 
-    newStroke(time) {
-        console.log('created new stroke', this.strokes)
-        if(this.strokes.length <= 0) this.startRecording(time)
-        const currStroke = {
-            points: [],
-            stroke: null
-        }
-        this.strokes.push(currStroke)
-        this.currStroke = currStroke
-    }
-
     addPoint (_p) {
       //  console.log(_p.t, _p, this, this.points)
         // let currStroke = this.strokes[this.strokes.length - 1]
@@ -174,7 +163,7 @@ module.exports = class Line extends Bus {
             const speed = distance/dt
 
             p.speed = prev.speed * this.smoothing + speed * (1 - this.smoothing)
-          //  console.log('speed', p.speed)
+            // console.log('speed', p.speed)
         }
         points.push(p)
         this.marker = p
@@ -214,8 +203,8 @@ module.exports = class Line extends Bus {
     }
 
     clear() {
-        console.log('clearing!')
-        this.currStroke.points = []
+        // console.log('clearing!')
+        this.points = []
         this.marker = null
         this._updateLine()
     }

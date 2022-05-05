@@ -11,14 +11,14 @@ const css = require('insert-css')
 const keymaps = require('./app/util/keymaps.js')
 
 css(`.styled-background {
-  /* background-color: #f00 !important; */
+  background-color: #f00 !important;
   background: rgba(0, 255, 255, 0.5) !important;
   mix-blend-mode: difference;
 }
 
 .CodeMirror-line span {
   pointer-events: all;
-  /*background: #fff;*/
+  background: #fff;
   padding: 2px;
 }
   `)

@@ -75,7 +75,7 @@ module.exports.CanvasRenderer = class CanvasRenderer {
 
                 if (prop in line) {
                     this.lineCtx[prop] = line[prop]
-                   // console.log(prop, prop in line, line, this.lineCtx)
+                    // console.log(prop, prop in line, line, this.lineCtx)
                 }
             })
         //    if('fillStyle' in line) this.lineCtx.fillStyle = line.fillStyle
@@ -93,14 +93,14 @@ module.exports.CanvasRenderer = class CanvasRenderer {
             // console.log('stroke is', line.stroke)
             this.lineCtx.fill(line.currStroke.stroke)
 
-            this.lineCtx.globalAlpha = 1.0
-            this.lineCtx.stroke(line.currStroke.stroke)
+            // this.lineCtx.globalAlpha = 1.0
+            // this.lineCtx.stroke(line.stroke)
 
             // draw speed 
             this.lineCtx.fillStyle = "rgba(0, 255, 0, 0.4)"
             line.currStroke.points.forEach((p) => {
                 const w = 1 + p.speed * 12
-                //  this.lineCtx.fillRect(p.x - w/2, p.y - w/2, w, w)
+                this.lineCtx.fillRect(p.x - w/2, p.y - w/2, w, w)
             })
 
             this.lineCtx.restore()
@@ -131,11 +131,13 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         // if(line.marker !== null) {
         //  const l = (line.value) * 255
         // const r = line._timeToNext/100
-        this.pointCtx.fillStyle = "#000"
+        // this.pointCtx.fillStyle = "#000"
+
+        this.pointCtx.fillStyle = "#fff"
         // this.pointCtx.fillStyle =   `rgba(${l}, ${l}, ${l}, 0)`
         const m = line.marker
         // const w = line._didTrigger ? 90 : 10               //const w = r
-        const w = 20
+        const w = 20 + line.speed * 10
         // console.log('drawing', line)
         this.pointCtx.fillRect(m.x - w / 2, m.y - w / 2, w, w)
         //  this.pointCtx.strokeRect(m.x - w/2, m.y - w/2, w, w)

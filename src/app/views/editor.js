@@ -22,7 +22,7 @@ module.exports = class Editor extends Component {
     // hacky way of accessing events
     state.editor = this
     //this.fontSize = 18
-    this.fontSize = 24
+    this.fontSize = 14
     this.emit = emit
     this.eval = repl.eval
   }
@@ -70,7 +70,7 @@ module.exports = class Editor extends Component {
 
   zoom(direction = 1) {
     this.fontSize = this.fontSize += direction*3
-    console.log(this.fontSize, direction)
+    // console.log(this.fontSize, direction)
     //console.log(size)
     this.cm.getWrapperElement().style["font-size"] = `${this.fontSize}px`
     this.cm.refresh()
