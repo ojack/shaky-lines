@@ -15,9 +15,12 @@ const notes = scale("A3", "pentatonic", 3)
 
 
 window.notes = notes
-window.quantize = (val = 0, arr = []) => arr[Math.floor(val*arr.length)]
+window.quantize = (val = 0, arr = []) => {
+    const v = Math.max(0, Math.min(0.9999999999, val))
+    return arr[Math.floor(v*arr.length)]
+}
 window.choose = (arr) => arr[Math.floor(Math.random()*arr.length)]
-console.log('NOTES', notes)
+// console.log('NOTES', notes)
 
 //console.log('scale', Scale, Scale.names(), notes)
 
@@ -44,7 +47,7 @@ module.exports = class DrawSynth {
         container.appendChild(renderer.el)
 
 
-        console.log(input, 'input')
+        // console.log(input, 'input')
         const gl = input.regl._gl
         this.state = state
         this.emit = emit
@@ -93,7 +96,7 @@ module.exports = class DrawSynth {
         const bpm = 100
         const division = 2
         const interval  = 60*1000/bpm
-        console.log('interval', interval)
+        // console.log('interval', interval)
         this.lines = new Array(NUM_LINES).fill(0).map((_, i) => new Line({
             readPixel: readPixel,
             // color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
@@ -114,7 +117,7 @@ module.exports = class DrawSynth {
         
         this.lines.forEach((line) => {
             line.on('update line', (points) => {
-                console.log('line updated')
+                // console.log('line updated')
                 renderer.clearLines()
                 this.lines.forEach((line) => {
                     //line.update(performance.now())
@@ -132,12 +135,12 @@ module.exports = class DrawSynth {
             window[`p${i}`] = line})
         this.currIndex = 0
 
-        console.log('created lines', this.lines)
+        // console.log('created lines', this.lines)
 
         //let this.currLine = this.lines[currIndex]
         this.currLine = this.baseCanvas
 
-        console.log('state', state)
+        // console.log('state', state)
        renderer.el.style.border = "1px solid white"
        renderer.el.style.touchAction = 'none'
        renderer.el.addEventListener('pointerdown', (e) => {
@@ -149,13 +152,13 @@ module.exports = class DrawSynth {
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
-            console.log('pointer down',e )
+            // console.log('pointer down',e )
          })
 
        renderer.el.tabIndex = 0
 
        renderer.el.addEventListener('keydown', (e) => {
-           console.log(e.key)
+        //    console.log(e.key)
            if(isFinite(e.key)) {
                 // if(e.key === "0") {
                 //     this.currLine = this.baseCanvas
@@ -166,7 +169,7 @@ module.exports = class DrawSynth {
                      this.emit('draw:select', e.key)
                // }
            } else if (e.key == "Backspace") {
-               console.log('clearing', this.currLine)
+            //    console.log('clearing', this.currLine)
                this.currLine.clear()
            }
         })
@@ -186,7 +189,7 @@ module.exports = class DrawSynth {
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
-            console.log('stop', this.currLine)
+            // console.log('stop', this.currLine)
 
             this.currLine.stopRecording()
             //console.log('on pointer up', e)

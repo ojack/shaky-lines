@@ -3,18 +3,18 @@ const performance = require('./../performance/code-notes.js')
 module.exports = (state, emitter) => {
   // state.selected = null
   state.style = {
-    // color0: "black",
-    // color1: "white",
+    color0: "black",
+    color1: "white",
     //color0: "pink",
-    color0: "#faeb15",
-    color1: "black",
+    // color0: "#faeb15",
+    // color1: "black",
     // color1: "aquamarine"
-   // width: window.innerWidth < 900 ? 400 : 800,
-    // height: window.innerWidth < 900 ? 400 : 800
+   width: window.innerWidth < 900 ? 400 : 800,
+    height: window.innerWidth < 900 ? 400 : 800
     // width: window.innerWidth,
     // height: window.innerHeight
-    width: 500,
-    height: 500
+    // width: 800,
+    // height: 800
   }
   // state.renderer = {
   //   drawingMode: false
@@ -51,7 +51,7 @@ module.exports = (state, emitter) => {
 
   // new functions related to drawing synth
   emitter.on('draw:select', (i) => {
-    console.log('selected', i)
+    // console.log('selected', i)
     state.drawSynth.selectLine(i)
     emitter.emit('render')
   })

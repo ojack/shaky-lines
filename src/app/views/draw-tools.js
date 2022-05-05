@@ -2,7 +2,7 @@ const html = require('choo/html')
 
 //     <div class="w2 h2 pa2"><div class="w1 h1 bg-white"></div></div>
 const colorString = (color) => {
-  console.log('color', color)
+  // console.log('color', color)
   // return color == null ? '#000' : `rgb(${color.r}, ${color.g}, ${color.b})`
   return color == null ? '#000' : `rgb(${color[0]}, ${color[1]}, ${color[2]})`
 
@@ -10,7 +10,7 @@ const colorString = (color) => {
 
 module.exports = (state, emit) => {
   if (state.drawSynth) {
-    console.log('DRAW', state.drawSynth)
+    // console.log('DRAW', state.drawSynth)
     const lines = [{}].concat(state.drawSynth.lines)
     const fileName = html`
     <div class="w4 z-4" onblur="${() => emit('sketches:close')}">

@@ -104,14 +104,14 @@ module.exports = class Line extends Bus {
     }
 
     set(props = {}){
-        console.log('setting', props)
+        // console.log('setting', props)
         Object.keys(props).forEach((prop) => {
             if(prop === 'trigger') {
                 this.trigger = props.trigger
             } else if(prop === 'color') {
                 if(chroma.valid(props.color)) {
                     this.color = chroma(props.color).rgb()
-                    console.log('changed color to', this.color)
+                    // console.log('changed color to', this.color)
                     this._updateLine()
                 }
             } else if(prop === 'strokeOptions') {
@@ -133,7 +133,7 @@ module.exports = class Line extends Bus {
             }
         })
        
-        console.log(this)
+        // console.log(this)
     }
 
     addPoint (_p) {
@@ -148,7 +148,7 @@ module.exports = class Line extends Bus {
             const speed = distance/dt
 
             p.speed = prev.speed * this.smoothing + speed * (1 - this.smoothing)
-            console.log('speed', p.speed)
+            // console.log('speed', p.speed)
         }
         this.points.push(p)
         this.marker = p
@@ -178,11 +178,11 @@ module.exports = class Line extends Bus {
         const p = this.points
         this.isRecording = false
         this.duration =  p[p.length - 1].t
-        console.log(this._startTime, this.duration, this)
+        // console.log(this._startTime, this.duration, this)
     }
 
     clear() {
-        console.log('clearing!')
+        // console.log('clearing!')
         this.points = []
         this.marker = null
         this._updateLine()
