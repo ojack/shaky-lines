@@ -64,7 +64,7 @@ module.exports = class DrawSynth {
 
         //    s0.init({ src: baseCanvas })
         //    src(s0).out()
-        s0.init({ src: window.lineCanvas })
+        s0.init({ src: window.strokeCanvas })
 
         speed = 0.4
 

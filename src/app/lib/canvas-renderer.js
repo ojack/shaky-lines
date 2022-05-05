@@ -32,7 +32,6 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         this.lineCtx.fillStyle = "#ed382b"
         this.lineCtx.lineWidth = 3
 
-        window.lineCanvas = lineCanvas
 
         const pointCanvas = document.createElement('canvas')
         pointCanvas.width = width
@@ -46,6 +45,9 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         this.pointCtx.lineWidth = 2
 
         this.points = []
+
+        window.strokeCanvas = lineCanvas
+        window.markerCanvas = pointCanvas
 
         this.el = document.createElement('div')
         this.el.appendChild(lineCanvas)
