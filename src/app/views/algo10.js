@@ -1,7 +1,7 @@
 const html = require('choo/html')
 
 const Hydra = require('./hydra-canvas.js')
-const Editor = require('./editor.js')
+const Editor = require('./___editor.js')
 const drawTools = require('./draw-tools.js')
 const CanvasExperiments = require('./draw-synth.js')
 const FreesoundComponent = require('./freesound-component.js')

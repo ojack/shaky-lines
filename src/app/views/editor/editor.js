@@ -33,6 +33,8 @@ module.exports = class Editor extends EventEmitter {
         this.emit(e, this.getCurrentBlock().text)
       } else if (e == 'editor:evalLine') {
         this.emit(e, this.getLine())
+      } else if (e == 'editor:saveToLocalStorage') {
+        this.emit('editor:save', this.cm.getValue()) 
       } else if (e == 'editor:toggleComment') {
         this.cm.toggleComment()
       // } else if (e == 'gallery:saveToURL') {

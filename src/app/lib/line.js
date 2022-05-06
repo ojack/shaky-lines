@@ -11,6 +11,8 @@
 
  const { ftm, wrand, euclid, seq } = util
 
+ window.seq = seq
+window.wrand = wrand
  const { getStroke } = require('perfect-freehand')
 
  function getSvgPathFromStroke(stroke) {
@@ -65,26 +67,37 @@ module.exports = class Line extends Bus {
         this.duration = 0
         this.muted = false
 
+        this.baseStrokeOptions = {
+            // size: 16,
+            size: 30,
+           //  thinning:0.8,
+           thinning: 2,
+             // smoothing: 0.2,
+             // streamline: 0.0,
+             start: { cap: false },
+              end: { 
+                  cap: false,
+                  taper: 0 
+                 },
+             // simulatePressure: false // uncomment to use with tablet
+       }
+
+
+       
+
         // new container for 
         this.strokeParams = {
             dynamic: {}, // contains properties that will be continuously updated
             color: this.color,
             alpha: 1,
             blending: 'source-over',
-            options:  {
-                // size: 16,
-                size: 30,
-               //  thinning:0.8,
-               thinning: 2,
-                 // smoothing: 0.2,
-                 // streamline: 0.0,
-                 start: { cap: false },
-                  end: { 
-                      cap: false,
-                      taper: 0 
-                     },
-                 // simulatePressure: false // uncomment to use with tablet
-               }
+            /* stroke options for perfect freehand */
+            size: 20,
+            thinning:0.8,
+            smoothing: 0.2,
+            streamline: 0.0,
+            recalculateStroke: false
+            // options:  
         }
 
         this.markerParams = {
@@ -251,7 +264,8 @@ module.exports = class Line extends Bus {
     }
 
     _updateLine() {
-        const stroke = getStroke(this.currStroke.points, this.strokeParams.options)
+        const { thinning, streamline, size, smoothing } = this.strokeParams
+        const stroke = getStroke(this.currStroke.points, Object.assign({}, this.baseStrokeOptions, { thinning, smoothing, streamline, size }))
         const path = getSvgPathFromStroke(stroke)
        this.currStroke.stroke = new Path2D(path)
        this.emit('update line', this.currStroke.points)
@@ -344,14 +358,22 @@ module.exports = class Line extends Bus {
             if(t - this._bangTime >= this._timeToNext) {
                if(this._shouldTrigger) {
                     const dynamicStrokeProps = Object.entries(this.strokeParams.dynamic)
+                    let recalculateStroke = false
                     dynamicStrokeProps.forEach(([prop, value]) => {
                         if(prop === 'color') {
                             this.strokeParams[prop] = chroma(value()).rgb()
                         } else {
                             this.strokeParams[prop] = value()
+                            const c = ['thinning', 'smoothing', 'size', 'streamline']
+                            console.log(prop, c.indexOf(prop))
+                            if(c.indexOf(prop) > -1) {
+                                recalculateStroke = true
+                            }
                         }
                         // console.log('value is ', this.strokeParams[prop])
                     })
+                    console.log(recalculateStroke)
+                    if(recalculateStroke) this._updateLine()
                     Object.entries(this.markerParams.dynamic).forEach(([prop, value]) => {
                         if(prop === 'color' || prop === 'lineColor') {
                             this.markerParams[prop] = chroma(value()).rgb()
