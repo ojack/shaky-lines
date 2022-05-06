@@ -5,8 +5,8 @@ const repl = require('./views/editor/repl.js')
 module.exports = (state, emitter) => {
   // state.selected = null
   state.style = {
-    color1: "green",
-    color0: "pink",
+    color1: "#111",
+    color0: "#eee",
     //color0: "pink",
     // color0: "#faeb15",
     // color1: "black",

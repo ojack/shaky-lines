@@ -1,11 +1,10 @@
 /* eslint-disable no-eval */
-var CodeMirror = require('codemirror-minified/lib/codemirror')
-require('codemirror-minified/mode/javascript/javascript')
-require('codemirror-minified/addon/hint/javascript-hint')
-require('codemirror-minified/addon/hint/show-hint')
-require('codemirror-minified/addon/selection/mark-selection')
-require('codemirror-minified/addon/comment/comment')
 
+var CodeMirror = require('codemirror/lib/codemirror')
+require('codemirror/mode/javascript/javascript')
+require('codemirror/addon/selection/mark-selection')
+
+ 
 const EventEmitter = require('nanobus')
 const keymaps = require('./keymaps.js')
 // const Mutator = require('./randomizer/Mutator.js');
@@ -40,19 +39,26 @@ module.exports = class Editor extends EventEmitter {
         this.emit(e, this)
       } else if (e === 'editor:formatCode') {
         this.formatCode()
+      } else if (e === 'editor:zoomIn') {
+        console.log('zooming')
+        self.zoom(1)
+      } else if (e === 'editor:zoomOut') {
+        self.zoom(-1)
       } else {
         this.emit(e, this)
       }
     })
 
     const opts = {
-      theme: 'tomorrow-night-eighties',
+      // theme: 'tomorrow-night-eighties',
       value: 'hello',
       mode: { name: 'javascript', globalVars: true },
       lineWrapping: true,
       styleSelectedText: true,
       extraKeys: extraKeys
     }
+    this.fontSize = 14
+
 
     this.cm = CodeMirror.fromTextArea(parent, opts)
     window.cm = this.cm
@@ -70,6 +76,15 @@ module.exports = class Editor extends EventEmitter {
 
   clear() {
     this.cm.setValue('\n \n // Type some code on a new line (such as "osc().out()"), and press CTRL+shift+enter')
+  }
+
+  zoom(direction = 1) {
+    this.fontSize = this.fontSize += direction*3
+    // console.log(this.fontSize, direction)
+    //console.log(size)
+    // console.log('zooming', this.fontSize, this.cm, this.cm.getWrapperElement())
+    this.cm.getWrapperElement().style["font-size"] = `${this.fontSize}px`
+    this.cm.refresh()
   }
 
   setValue(val) {

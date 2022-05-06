@@ -145,7 +145,7 @@ module.exports = class DrawSynth {
         this.currLine = this.baseCanvas
 
         // console.log('state', state)
-        renderer.el.style.border = "1px solid white"
+        // renderer.el.style.border = "1px solid white"
         renderer.el.style.touchAction = 'none'
         renderer.el.addEventListener('pointerdown', (e) => {
             this.tone.start()
@@ -171,7 +171,7 @@ module.exports = class DrawSynth {
         renderer.el.tabIndex = 0
 
         renderer.el.addEventListener('keydown', (e) => {
-            //    console.log(e.key)
+             console.log(e.key, e)
             if (isFinite(e.key)) {
                 // if(e.key === "0") {
                 //     this.currLine = this.baseCanvas
@@ -183,6 +183,9 @@ module.exports = class DrawSynth {
                 // }
             } else if (e.key == "Backspace") {
                 //    console.log('clearing', this.currLine)
+                if(e.ctrlKey) {
+                    this.lines.forEach((l) => { l.clear() })
+                }
                 this.currLine.clear()
             } else if (e.key === 'r') {
                 if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording()

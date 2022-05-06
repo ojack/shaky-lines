@@ -7,5 +7,8 @@ module.exports = {
     'Shift-Ctrl-F': 'editor:formatCode',
     'Shift-Ctrl-L': 'gallery:saveToURL',
     'Shift-Ctrl-H': 'hideAll',
-    'Shift-Ctrl-S': 'screencap'
+    'Shift-Ctrl-S': 'screencap',
+    'Ctrl--': 'editor:zoomOut',
+    'Ctrl-=': 'editor:zoomIn',
+    'Ctrl-S': 'editor:saveToLocalStorage'
 }

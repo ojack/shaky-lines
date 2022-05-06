@@ -41,9 +41,9 @@ module.exports = class Editor extends Component {
 
   createElement ({ width = window.innerWidth, height = window.innerHeight} = {}) {
     this.textEl = html` <textarea></textarea>`
-    this.logElement = html`<div class="console cm-s-tomorrow-night-eighties"></div>`
+    this.logElement = html`<div class="console cm-s-default"></div>`
     return html`<div id="editor-container" style="display:flex;flex-direction:column;">
-       <div style="position:relative;flex:auto;padding:15px">${this.textEl}</div>
+       <div style="position:relative;flex:auto;padding:15px" class="red">${this.textEl}</div>
        ${this.logElement}
        </div>`
   }
