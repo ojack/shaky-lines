@@ -1,6 +1,6 @@
 const html = require('choo/html')
 
-//     <div class="w2 h2 pa2"><div class="w1 h1 bg-white"></div></div>
+//     <div class="w2 h1 pa2"><div class="w1 h1 bg-white"></div></div>
 const colorString = (color) => {
   // console.log('color', color)
   // return color == null ? '#000' : `rgb(${color.r}, ${color.g}, ${color.b})`
@@ -15,20 +15,20 @@ module.exports = (state, emit) => {
     // const lines = state.drawSynth.lines
     const fileName = html`
     <div class="w4 z-4" onblur="${() => emit('sketches:close')}">
-    <input class="bg-black ba white b--white h2 w4" value=${state.sketches.name} oninput=${(e) => emit('sketches:updateName', e.target.value)} type="text" id="file-name" name="file-name"/>
+    <input style="background-color:${state.style.color0};color:${state.style.color1};border-color:${state.style.color1}" class="f7 courier ba b--white h1 w4" value=${state.sketches.name} oninput=${(e) => emit('sketches:updateName', e.target.value)} type="text" id="file-name" name="file-name"/>
     ${state.sketches.visible ? html`
     <div 
-      class="overflow-y-auto h4 ba b--white" 
+      class="overflow-y-auto f7 ba b--white" 
       onfocusout="${() => emit('sketches:close')}">
-      ${Object.keys(state.sketches.all).reverse().map((key) => html`<div class="white bg-black dim pointer" onclick=${(e) => emit('sketches:load', key)}>${key}</div>`)}</div>` : ''}
+      ${Object.keys(state.sketches.all).reverse().map((key) => html`<div style="background-color:${state.style.color0};color:${state.style.color1}" class="dim pointer" onclick=${(e) => emit('sketches:load', key)}>${key}</div>`)}</div>` : ''}
     </div>
-    <div class="tc w2 f6 pa0 pv2 dim pointer ba b--white" onclick=${() => emit('sketches:toggle')}>${state.sketches.visible ? '^' : '...'}</div>
+    <div class="tc w2 f7 courier pa0 pv2 dim pointer ba b--white" onclick=${() => emit('sketches:toggle')}>${state.sketches.visible ? '^' : '...'}</div>
     `
 
-    const lineButtons = html`<div class="flex h2"> 
+    const lineButtons = html`<div class="flex h1"> 
     <div class="flex"> 
       ${lines.map((line, i) => html`
-      <div class=" ${i === 0? "w0 pa0" : "w2 pa2"} h2 b--white ${state.drawSynth.currIndex === i ? "ba" : ""}" onclick=${() => emit('draw:select', i)} style="background-color:${colorString(line.color)}">
+      <div class=" ${i === 0? "w0 pa0" : "w2 pa2"} h1 b--white ${state.drawSynth.currIndex === i ? "ba" : ""}" onclick=${() => emit('draw:select', i)} style="background-color:${colorString(line.color)}">
       </div>`)}
     </div>
     ${fileName}
@@ -39,14 +39,14 @@ module.exports = (state, emit) => {
 
 
     // const presetButtons = html`<div class="flex">${state.presets.all.map((p, i) => html`
-    //   <div class="w2 h2 pa2 b--white ${state.presets.selected === i? "ba" : ""}" onclick=${() => emit('editor:preset', i)}>
+    //   <div class="w2 h1 pa2 b--white ${state.presets.selected === i? "ba" : ""}" onclick=${() => emit('editor:preset', i)}>
     //   ${i}</div>`)}
     // </div>`
 
     const presetButtons = ''
 
     const midi = state.drawSynth.midi
-    const midiDropdown = html`<select onchange=${(e) => emit('midi:select', e.target.value)} class="white bg-black courier h2" name="midi">
+    const midiDropdown = html`<select onchange=${(e) => emit('midi:select', e.target.value)} style="background-color:${state.style.color0};color:${state.style.color1};border-color:${state.style.color1}" class="f7 courier h1" name="midi">
      ${midi.outputs.map((m, i) => html`<option value=${i} ${i == midi.currDevice ? "selected" : ""}>${m.name}</option>`)}</select>`
 
 

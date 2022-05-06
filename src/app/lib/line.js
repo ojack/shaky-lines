@@ -89,6 +89,9 @@ module.exports = class Line extends Bus {
 
         this.markerParams = {
             color: [0, 0, 0],
+            lineColor: [255, 255, 255],
+            lineWidth: 0,
+            lineBlending: 'source-over',
             width: 20,
             height: 20,
             alpha: 1,
@@ -310,7 +313,7 @@ module.exports = class Line extends Bus {
             this.prevValue = this.value
             this.value = this._readPixel(this.marker.x, this.marker.y)
             Object.entries(this.markerParams.continuous).forEach(([prop, value]) => {
-                if(prop === 'color') {
+                if(prop === 'color' || prop === 'lineColor') {
                     this.markerParams[prop] = chroma(value()).rgb()
                 } else {
                     this.markerParams[prop] = value()
@@ -350,7 +353,7 @@ module.exports = class Line extends Bus {
                         // console.log('value is ', this.strokeParams[prop])
                     })
                     Object.entries(this.markerParams.dynamic).forEach(([prop, value]) => {
-                        if(prop === 'color') {
+                        if(prop === 'color' || prop === 'lineColor') {
                             this.markerParams[prop] = chroma(value()).rgb()
                         } else {
                             this.markerParams[prop] = value()

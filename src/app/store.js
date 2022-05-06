@@ -1,19 +1,20 @@
 const performance = require('./../performance/code-notes.js')
 const examples = require('./examples.js')
+const repl = require('./views/editor/repl.js')
 
 module.exports = (state, emitter) => {
   // state.selected = null
   state.style = {
-    color0: "black",
-    color1: "white",
+    color1: "green",
+    color0: "pink",
     //color0: "pink",
     // color0: "#faeb15",
     // color1: "black",
     // color1: "aquamarine"
-    width: window.innerWidth < 900 ? 400 : 800,
-    height: window.innerWidth < 900 ? 400 : 800
-    // width: window.innerWidth,
-    // height: window.innerHeight
+    // width: window.innerWidth < 900 ? 400 : 800,
+    // height: window.innerWidth < 900 ? 400 : 800
+     width: window.innerWidth,
+     height: window.innerHeight
     // width: 800,
     // height: 800
   }
@@ -72,6 +73,24 @@ module.exports = (state, emitter) => {
   emitter.on('sketches:toggle', () => {
     state.sketches.visible = !state.sketches.visible
     emitter.emit('render')
+  })
+
+
+  emitter.on('editor:evalAll', function () {
+    const editor = state.editor.editor
+    const code = editor.getValue()
+    repl.eval(code, (string, err) => {
+      editor.flashCode()
+    //  if (!err) sketches.saveLocally(code)
+    })
+  })
+
+  emitter.on('editor:evalLine', (line) => {
+    repl.eval(line)
+  })
+
+  emitter.on('editor:evalBlock', (block) => {
+    repl.eval(block)
   })
 
   // emitter.on('editor:preset', (index) => {
@@ -151,7 +170,7 @@ module.exports = (state, emitter) => {
     console.log('loading', key, state.sketches)
     // const p = state.presets.all[state.presets.selected]
     // state.presets.name = p.name
-    state.editor.cm.setValue(state.sketches.all[key])
+    state.editor.editor.setValue(state.sketches.all[key])
     emitter.emit('render')
     // state.editor.eval(code)
   }

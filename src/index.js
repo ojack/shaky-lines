@@ -16,10 +16,14 @@ css(`.styled-background {
   mix-blend-mode: difference;
 }
 
+.CodeMirror-scroll {
+  max-height: 650px;
+}
+
 .CodeMirror-line span {
   pointer-events: all;
-/*  background: #fff;*/
- /* padding: 2px;*/
+  background: #fff;
+  padding: 2px;
 }
   `)
 
