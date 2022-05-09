@@ -46,14 +46,13 @@ module.exports = class DrawSynth {
         container.appendChild(baseCanvas)
         container.appendChild(renderer.el)
 
-
         // console.log(input, 'input')
         const gl = input.regl._gl
         this.state = state
         this.emit = emit
         this.midi = new MidiOut()
 
-        this.multiRecord = false
+        this.multiRecord = true
 
         this.tone = new Tone()
 
@@ -84,7 +83,7 @@ module.exports = class DrawSynth {
             .luma(0.1)
             .out()
 
-        strokeCanvas.style.display = 'none'
+        // strokeCanvas.style.display = 'none'
         markerCanvas.style.display = 'none'
 
         // read value at point from "input" canvas
@@ -118,7 +117,7 @@ module.exports = class DrawSynth {
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
-          //  interval: interval / division
+            //  interval: interval / division
             interval: 5000
         }))
 
@@ -161,6 +160,8 @@ module.exports = class DrawSynth {
                 if (!this.currLine.isRecording) {
                     this.currLine.clear()
                     this.currLine.startRecording(performance.now())
+                } else {
+                    this.currLine.startStroke()
                 }
             } else {
                 this.currLine.clear()
@@ -176,7 +177,7 @@ module.exports = class DrawSynth {
         renderer.el.tabIndex = 0
 
         renderer.el.addEventListener('keydown', (e) => {
-             console.log(e.key, e)
+            console.log(e.key, e)
             if (isFinite(e.key)) {
                 // if(e.key === "0") {
                 //     this.currLine = this.baseCanvas
@@ -188,7 +189,7 @@ module.exports = class DrawSynth {
                 // }
             } else if (e.key == "Backspace") {
                 //    console.log('clearing', this.currLine)
-                if(e.ctrlKey) {
+                if (e.ctrlKey) {
                     this.lines.forEach((l) => { l.clear() })
                 }
                 this.currLine.clear()
@@ -217,6 +218,8 @@ module.exports = class DrawSynth {
 
             if (!this.multiRecord) {
                 this.currLine.stopRecording()
+            } else {
+                this.currLine.endStroke()
             }
             //console.log('on pointer up', e)
             //  if (!this.drawingMode) return
