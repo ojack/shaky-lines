@@ -279,6 +279,7 @@ module.exports = class Line extends Bus {
         this._startTime = t
        // this._bangTime = this._startTime
         this.numTransforms = 0
+        this.startStroke()
     }
 
     stopRecording() {
@@ -293,15 +294,17 @@ module.exports = class Line extends Bus {
 
     startStroke () {
        // const stroke = 
+       this.currStroke = {
+        points: [],
+        stroke: null
+        }
+        this.strokes.push(this.currStroke)
     }
 
     endStroke () {
-        this.strokes.push(this.currStroke)
+       
         this._updateLine()
-        this.currStroke = {
-            points: [],
-            stroke: null
-        }
+       
     }
 
     clear() {

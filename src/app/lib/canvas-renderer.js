@@ -89,22 +89,24 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         //    if('fillStyle' in line) this.lineCtx.fillStyle = line.fillStyle
         //    if('lineWidth' in line) this.lineCtx.lineWidth = line.lineWidth
         // line.lines.forEach((line) => {
-
-        if (line.currStroke.points.length > 1) {
-            //  const points = line.points
-            //  this.lineCtx.beginPath()
-            //  this.lineCtx.moveTo(points[0].x, points[0].y)
-            //  points.forEach((point) => {
-            //      this.lineCtx.lineTo(point.x, point.y)
-            //  })
-            //  this.lineCtx.stroke()
-            // console.log('stroke is', line.stroke)
-            this.lineCtx.fill(line.currStroke.stroke)
-            this.lineCtx.fillStyle = "rgba(0, 255, 0, 0.4)"
-            this.lineCtx.restore()
-
-        }
-
+        line.strokes.forEach((stroke) => {
+            if (stroke.points.length > 1) {
+                //  const points = line.points
+                //  this.lineCtx.beginPath()
+                //  this.lineCtx.moveTo(points[0].x, points[0].y)
+                //  points.forEach((point) => {
+                //      this.lineCtx.lineTo(point.x, point.y)
+                //  })
+                //  this.lineCtx.stroke()
+                // console.log('stroke is', line.stroke)
+                this.lineCtx.fill(stroke.stroke)
+              
+    
+            }
+        })
+        
+        this.lineCtx.fillStyle = "rgba(0, 255, 0, 0.4)"
+        this.lineCtx.restore()
     }
 
     drawMarker(line) {
