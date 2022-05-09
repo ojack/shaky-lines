@@ -58,6 +58,11 @@ module.exports = (state, emitter) => {
     emitter.emit('render')
   })
 
+  emitter.on('hideAll', () => {
+    state.panels.editor = !state.panels.editor
+    emitter.emit('render')
+  })
+
   emitter.on('midi:select', (i) => {
     console.log('selected midi', i)
     state.drawSynth.midi.select(parseFloat(i))

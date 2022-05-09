@@ -1,5 +1,6 @@
 module.exports = { 
-    'Ctrl-Enter': 'editor:evalLine',
+    // 'Ctrl-Enter': 'editor:evalLine',
+    'Ctrl-Enter': 'editor:evalBlock',
     'Ctrl-/': 'editor:toggleComment',
     'Alt-Enter': 'editor:evalBlock',
     'Shift-Ctrl-Enter': 'editor:evalAll',

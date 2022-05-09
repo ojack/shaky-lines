@@ -41,6 +41,8 @@ module.exports = class Editor extends EventEmitter {
         this.emit(e, this)
       } else if (e === 'editor:formatCode') {
         this.formatCode()
+      // } else if (e === 'hideAll') {
+      //   this.toggle()
       } else if (e === 'editor:zoomIn') {
         console.log('zooming')
         self.zoom(1)

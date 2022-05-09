@@ -372,7 +372,7 @@ module.exports = class Line extends Bus {
                         }
                         // console.log('value is ', this.strokeParams[prop])
                     })
-                    console.log(recalculateStroke)
+                    // console.log(recalculateStroke)
                     if(recalculateStroke) this._updateLine()
                     Object.entries(this.markerParams.dynamic).forEach(([prop, value]) => {
                         if(prop === 'color' || prop === 'lineColor') {

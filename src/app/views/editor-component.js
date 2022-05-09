@@ -31,11 +31,15 @@ module.exports = class Editor extends Component {
   }
 
   update (state) {
-    // if(state.showInfo === true || state.showUI === false) {
-        // this.hide()
-    // } else {
+    console.log('state', state)
+    //  if(typeof state !== 'undefined') {
+      if(state.panels.editor === false) {
+        console.log('hiding')
+        this.hide()
+    } else {
         this.show()
-    // }
+    }
+  // }
     return false
   }
 

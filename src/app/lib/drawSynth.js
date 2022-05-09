@@ -65,6 +65,8 @@ module.exports = class DrawSynth {
         //    s0.init({ src: baseCanvas })
         //    src(s0).out()
         s0.init({ src: window.strokeCanvas })
+        s1.init({ src: window.markerCanvas })
+
 
         speed = 0.4
 
@@ -82,6 +84,8 @@ module.exports = class DrawSynth {
             .luma(0.1)
             .out()
 
+        strokeCanvas.style.display = 'none'
+        markerCanvas.style.display = 'none'
 
         // read value at point from "input" canvas
         const pixels = new Uint8Array(4 * 1)
@@ -114,7 +118,8 @@ module.exports = class DrawSynth {
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
-            interval: interval / division
+          //  interval: interval / division
+            interval: 5000
         }))
 
         this.lines.forEach((line) => {
