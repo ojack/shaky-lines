@@ -84,11 +84,12 @@ module.exports = class DrawSynth {
             .out()
 
         // strokeCanvas.style.display = 'none'
-        markerCanvas.style.display = 'none'
+        // markerCanvas.style.display = 'none'
 
         // read value at point from "input" canvas
         const pixels = new Uint8Array(4 * 1)
         const readPixel = (x, y) => {
+            //console.log('reading', x, y)
             gl.readPixels(x, canvas.height - y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
             const red = pixels[0] / 255
             const green = pixels[1] / 255
@@ -104,6 +105,8 @@ module.exports = class DrawSynth {
         // console.log('interval', interval)
         this.lines = new Array(NUM_LINES).fill(0).map((_, i) => new Line({
             readPixel: readPixel,
+            parentWidth: width,
+            parentHeight: height,
             // color: { r: colors[i][0], g: colors[i][1], b: colors[i][2]},
             color: colors[i],
             trigger: (v) => {
@@ -112,13 +115,14 @@ module.exports = class DrawSynth {
                 // if(Math.random() < value)
                 //   this.synth.trigger(1) 
                 //this.midi.send(80 - i * 5)
-                this.midi.note(quantize(1 - y / height, notes), 100, _timeToNext - 10, i)
-
+              //  this.midi.note(quantize(1 - y / height, notes), 100, _timeToNext - 10, i)
+                 this.midi.cc(i, 127*x)
+                 this.midi.cc(NUM_LINES + i, 127*y)
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
             //  interval: interval / division
-            interval: 5000
+            interval: 200
         }))
 
         this.lines.forEach((line) => {
@@ -194,8 +198,8 @@ module.exports = class DrawSynth {
                 }
                 this.currLine.clear()
             } else if (e.key === 'r') {
-                if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording()
-                this.multiRecord = !this.multiRecord
+                if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording(performance.now())
+               // this.multiRecord = !this.multiRecord
             }
         })
 
@@ -217,7 +221,7 @@ module.exports = class DrawSynth {
             // console.log('stop', this.currLine)
 
             if (!this.multiRecord) {
-                this.currLine.stopRecording()
+                this.currLine.stopRecording(performance.now())
             } else {
                 this.currLine.endStroke()
             }

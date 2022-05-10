@@ -32,6 +32,8 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         this.lineCtx.fillStyle = "#ed382b"
         this.lineCtx.lineWidth = 3
 
+        this.width = width
+        this.height = height
 
         const pointCanvas = document.createElement('canvas')
         pointCanvas.width = width
@@ -110,8 +112,12 @@ module.exports.CanvasRenderer = class CanvasRenderer {
     }
 
     drawMarker(line) {
+
+        // this.pointCtx.fillRect(100, 100, 100, 100)
         this.pointCtx.save()
         const { width, height, lineWidth, alpha, blending, lineColor, color } = line.markerParams
+
+        // console.log('drawing marker', line.markerParams, line.marker)
         const ctx = this.pointCtx
         // this.pointCtx.fillStyle = "#000"
         ctx.fillStyle = colorString(color)
@@ -128,12 +134,13 @@ module.exports.CanvasRenderer = class CanvasRenderer {
         // console.log('drawing', line)
         ctx.fillRect(m.x - w / 2, m.y - h / 2, w, h)
         if (lineWidth > 0) {
-            console.log('line',  colorString(lineColor), lineColor)
+            // console.log('line',  colorString(lineColor), lineColor)
             ctx.strokeStyle = colorString(lineColor)
             ctx.lineWidth = lineWidth
             ctx.strokeRect(m.x - w / 2, m.y - h / 2, w, h)
         }
-        //  
+
+       
         // this.ctx.stroke()
         //  }
         // })

@@ -38,7 +38,7 @@ const formatParams = (value) => {
 }
 
 module.exports = class Line extends Bus {
-    constructor ({ interval = 100, readPixel = () => {}, color, onUpdate = () => {},  trigger = () => {}, mode="" } = {}, i = 0) {
+    constructor ({ parentWidth = window.innerWidth, parentHeight = window.innerHeight, interval = 100, readPixel = () => {}, color, onUpdate = () => {},  trigger = () => {}, mode="" } = {}, i = 0) {
         super()
         this.setInterval( interval )
         this.index = i
@@ -47,6 +47,8 @@ module.exports = class Line extends Bus {
         // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
 
+        this.parentWidth = parentWidth
+        this.parentHeight = parentHeight
         // this.strokes = [] // new object that will hold a stroke = { points: [..], stroke: ... }
 
         // old stroke and points
@@ -62,7 +64,7 @@ module.exports = class Line extends Bus {
 
         this.smoothing = 0.96// how much to smooth speed values
         this.marker = null
-        this.isRecording = true
+        this.isRecording = false
         this._startTime = 0
         this._timeToNext = interval
         this._timeSinceBang = 10000000
@@ -103,9 +105,9 @@ module.exports = class Line extends Bus {
         }
 
         this.markerParams = {
-            color: [0, 0, 0],
+            color: [0, 255, 0],
             lineColor: [255, 255, 255],
-            lineWidth: 0,
+            lineWidth: 4,
             lineBlending: 'source-over',
             width: 20,
             height: 20,
@@ -254,8 +256,8 @@ module.exports = class Line extends Bus {
         }
         points.push(p)
         this.marker = p
-        this.x = this.marker.x
-        this.y = this.marker.y
+        this.x = this.marker.x/this.parentWidth // normalize x and y
+        this.y = this.marker.y/this.parentHeight 
         this.speed = this.marker.speed
 
         this.isRecording = true
@@ -263,6 +265,19 @@ module.exports = class Line extends Bus {
         // console.log('adding points', points, this.strokes)
        if(points.length % 2 === 0) this._updateLine()
       // console.log(stroke, path, this.stroke)
+    }
+
+    updateStroke(i = null) {
+        const { thinning, streamline, size, smoothing } = this.strokeParams
+        if(i === null) {
+            this.strokes.forEach((_stroke) => {
+                const stroke = getStroke(_stroke.points, Object.assign({}, this.baseStrokeOptions, { thinning, smoothing, streamline, size }))
+                const path = getSvgPathFromStroke(stroke)
+                _stroke.stroke = new Path2D(path)
+            })
+            this.emit('update line')
+         
+        }
     }
 
     _updateLine() {
@@ -276,20 +291,23 @@ module.exports = class Line extends Bus {
     }
 
     startRecording(t) {
+        console.log('starting to record')
         this._startTime = t
        // this._bangTime = this._startTime
         this.numTransforms = 0
+        this.strokes = []
         this.startStroke()
     }
 
-    stopRecording() {
+    stopRecording(t) {
        // console.log('points', this, this.points)
     //    this._updateLine()
         this.endStroke()
         const p = this.currStroke.points
         this.isRecording = false
-        this.duration =  p[p.length - 1].t
-        // console.log(this._startTime, this.duration, this)
+       // this.duration =  p[p.length - 1].t
+       this.duration = t - this._startTime
+         console.log(this._startTime, this.duration, this.strokes)
     }
 
     startStroke () {
@@ -311,32 +329,50 @@ module.exports = class Line extends Bus {
         // console.log('clearing!')
         this.currStroke.points = []
         this.marker = null
+        this.strokes = []
         this._updateLine()
     }
 
     _move(t) {
         if(!this.isRecording && this.currStroke.points.length > 1) {
-          
             // const start = p[0].t
             // const dur = end - start
             const progress = (t - this._startTime)%this.duration
+           // console.log('progess', progress)
 
             if(this.mode === 'wrap') {
                 const numReps = Math.floor((t- this._startTime)/this.duration)
                 if(numReps > this.numTransforms) this._transformPath()
             }
-            const p = this.currStroke.points
-            
+            let p = this.strokes[0].points
             let index = 0
             let time = p[index].t
-            while(progress > time && index < p.length - 1){
-                index++
-                time = p[index].t
-            }
-            const point = p[index]
+            let strokeIndex = 0
+            let prevIndex = 0
+            let prevStrokeIndex = 0
+
+            // console.log('starting to calculate', time, progress, this.duration)
+            // while(strokeIndex < this.strokes.length - 1) {
+                while(progress > time){
+                    prevIndex = index
+                    prevStrokeIndex = strokeIndex
+                    index++
+                    if(index > p.length - 1) {
+                        index = 0
+                        strokeIndex ++
+                    }
+                    if(strokeIndex >= this.strokes.length) break;
+                    p = this.strokes[strokeIndex].points
+                    time = p[index].t
+                }
+          
+            // }
+         //   const point = this.strokes[strokeIndex].points[index]
+            const point =  this.strokes[prevStrokeIndex].points[prevIndex]
+          //  console.log(time, progress, strokeIndex, index, point, this.strokes, p)
             this.marker = point
-            this.x = this.marker.x
-            this.y = this.marker.y
+            this.x = this.marker.x/this.parentWidth
+            this.y = this.marker.y/this.parentHeight
             this.speed = this.marker.speed
         }
     }
@@ -345,6 +381,7 @@ module.exports = class Line extends Bus {
         if(this.marker) {
             this.prevValue = this.value
             this.value = this._readPixel(this.marker.x, this.marker.y)
+            // console.log('valll test', this._readPixel(100, 100))
             Object.entries(this.markerParams.continuous).forEach(([prop, value]) => {
                 if(prop === 'color' || prop === 'lineColor') {
                     this.markerParams[prop] = chroma(value()).rgb()
