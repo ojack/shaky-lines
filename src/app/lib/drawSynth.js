@@ -13,6 +13,9 @@ const NUM_LINES = colors.length
 const notes = scale("A3", "pentatonic", 3)
 //const notes = scale("A3", "whole tone", 3)
 
+var pressedKeys = {};
+
+
 
 window.notes = notes
 window.quantize = (val = 0, arr = []) => {
@@ -69,19 +72,21 @@ module.exports = class DrawSynth {
 
         speed = 0.4
 
-        src(o0)
-            .hue(0.001)
-            .contrast(1.01)
-            .modulateHue(o0, 1)
-            .brightness(-0.001)
-            // .scrollY([-0.001, 0])
-            .scrollX([0, 0.001, 0, -0.001])
-            .scrollY(() => -0.01 * window.p3.y / height)
-            .layer(
-                src(s0)
-            )
-            .luma(0.1)
-            .out()
+        // src(o0)
+        //     .hue(0.001)
+        //     .contrast(1.01)
+        //     .modulateHue(o0, 1)
+        //     .brightness(-0.001)
+        //     // .scrollY([-0.001, 0])
+        //     .scrollX([0, 0.001, 0, -0.001])
+        //     .scrollY(() => -0.01 * window.p3.y / height)
+        //     .layer(
+        //         src(s0)
+        //     )
+        //     .luma(0.1)
+        //     .out()
+
+        solid().out()
 
         // strokeCanvas.style.display = 'none'
         // markerCanvas.style.display = 'none'
@@ -115,9 +120,9 @@ module.exports = class DrawSynth {
                 // if(Math.random() < value)
                 //   this.synth.trigger(1) 
                 //this.midi.send(80 - i * 5)
-              //  this.midi.note(quantize(1 - y / height, notes), 100, _timeToNext - 10, i)
-                 this.midi.cc(i, 127*x)
-                 this.midi.cc(NUM_LINES + i, 127*y)
+                //  this.midi.note(quantize(1 - y / height, notes), 100, _timeToNext - 10, i)
+                this.midi.cc(i, 127 * x)
+                this.midi.cc(NUM_LINES + i, 127 * y)
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
@@ -173,12 +178,24 @@ module.exports = class DrawSynth {
             }
             // this.currLine.newStroke(performance.now())
             this.currLine.addPoint({
-                x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
+                x: e.pageX, y: e.pageY, pressure: e.pressure, t: performance.now()
             })
             // console.log('pointer down',e )
         })
 
         renderer.el.tabIndex = 0
+
+        window.addEventListener('keyup',(e) => { 
+            console.log('key up', e.key)
+            pressedKeys[e.key] = false; 
+            if(e.key === 'q') {
+                if(this.currLine.isRecording) this.currLine.stopRecording(performance.now())
+            }
+        })
+        window.addEventListener('keydown', (e) => {
+            console.log('key down', e.key)
+            pressedKeys[e.key] = true;
+        })
 
         renderer.el.addEventListener('keydown', (e) => {
             console.log(e.key, e)
@@ -198,8 +215,8 @@ module.exports = class DrawSynth {
                 }
                 this.currLine.clear()
             } else if (e.key === 'r') {
-                if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording(performance.now())
-               // this.multiRecord = !this.multiRecord
+                //  if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording(performance.now())
+                // this.multiRecord = !this.multiRecord
             }
         })
 
@@ -207,7 +224,7 @@ module.exports = class DrawSynth {
             // console.log('pointer move', e)
             if (e.buttons !== 1) return
             this.currLine.addPoint({
-                x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
+                x: e.pageX, y: e.pageY, pressure: e.pressure, t: performance.now()
             })
             // console.log(this.currLine)
             //  this.currDrawing.add([e.clientX, e.clientY, e.pressure])
@@ -215,6 +232,7 @@ module.exports = class DrawSynth {
         })
 
         renderer.el.addEventListener('pointerup', (e) => {
+            console.log(pressedKeys)
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })
@@ -223,7 +241,12 @@ module.exports = class DrawSynth {
             if (!this.multiRecord) {
                 this.currLine.stopRecording(performance.now())
             } else {
-                this.currLine.endStroke()
+                // if holding q key, continue adding strokes
+                if(pressedKeys.q === true) {
+                    this.currLine.endStroke()
+                } else {
+                    this.currLine.stopRecording(performance.now())
+                }
             }
             //console.log('on pointer up', e)
             //  if (!this.drawingMode) return

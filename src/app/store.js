@@ -4,6 +4,11 @@ const repl = require('./views/editor/repl.js')
 
 module.exports = (state, emitter) => {
   // state.selected = null
+  state.flok = {
+    enabled: false,
+    url: "https://flok.clic.cf/s/rarefaccio?layout=hydra&noHydra=1&bgOpacity=0&readonly=1",
+  }
+
   state.style = {
     color1: "#eee",
     color0: "#000",
@@ -13,8 +18,8 @@ module.exports = (state, emitter) => {
     // color1: "aquamarine"
     // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
-     width: window.innerWidth,
-     height: window.innerHeight
+    width: window.innerWidth,
+    height: window.innerHeight
     // width: 800,
     // height: 800
   }
@@ -86,7 +91,7 @@ module.exports = (state, emitter) => {
     const code = editor.getValue()
     repl.eval(code, (string, err) => {
       editor.flashCode()
-    //  if (!err) sketches.saveLocally(code)
+      //  if (!err) sketches.saveLocally(code)
     })
   })
 
@@ -151,13 +156,13 @@ module.exports = (state, emitter) => {
   const p = localStorage.getItem('spiral-synth')
   if (p) {
     state.sketches.all = Object.assign({}, state.sketches.all, JSON.parse(p))
-  //   // state.presets.all = presets
-  //   // state.presets.all = presets.map((_p, i) => ({
-  //   //   name: _p.name,
-  //   //   code: _p.code
-  //   // }))
-  //   // console.log('got presets!', presets)
-  //   //state.sketches = JSON.parse(p)
+    //   // state.presets.all = presets
+    //   // state.presets.all = presets.map((_p, i) => ({
+    //   //   name: _p.name,
+    //   //   code: _p.code
+    //   // }))
+    //   // console.log('got presets!', presets)
+    //   //state.sketches = JSON.parse(p)
   }
 
 
@@ -229,4 +234,34 @@ module.exports = (state, emitter) => {
       emitter.emit('render')
     }
   })
+
+  /* flok loading code */
+  if (state.flok.enabled === true) {
+    let hasSynced = false
+    let timeout = null
+    // execute editor events on global context
+    window.addEventListener("message", function (event) {
+      //console.log('received message', event)
+      if (event.data) {
+        if (event.data.cmd === "evaluateCode") {
+          //  console.log('evaluate', event.data.args.body)
+          // editor.style.opacity = 1
+          //  if(readOnly) setTimeout(() => editor.style.opacity = 1, 2000)
+          //  if (event.data.args.editorId == 1) {
+          //  agua.run(event.data.args.body)
+          //  } else {
+          eval(event.data.args.body)
+          //  }
+
+        } else if (event.data.cmd === "initialSync") {
+          if (!hasSynced) {
+            const editorText = event.data.args.editors
+            if (editorText[0]) eval(editorText[0])
+            //if(editorText[1]) agua.run(editorText[1])
+          }
+        }
+      }
+
+    })
+  }
 }

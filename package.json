@@ -27,6 +27,7 @@
     "nanobus": "^4.5.0",
     "perfect-freehand": "^1.0.16",
     "raf-loop": "^1.1.3",
+    "simplify-js": "^1.2.4",
     "tone": "^14.7.77"
   },
   "devDependencies": {
