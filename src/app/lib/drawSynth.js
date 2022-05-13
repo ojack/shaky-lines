@@ -121,14 +121,14 @@ module.exports = class DrawSynth {
                 //   this.synth.trigger(1) 
                 //this.midi.send(80 - i * 5)
                 //  this.midi.note(quantize(1 - y / height, notes), 100, _timeToNext - 10, i)
-                this.midi.cc(i, 127 * x)
-                this.midi.cc(NUM_LINES + i, 127 * y)
+                this.midi.cc(i, 127 * (1-y))
+                this.midi.cc(NUM_LINES + i, 127 * x)
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
             //  interval: interval / division
             interval: 200
-        }))
+        }, i))
 
         this.lines.forEach((line) => {
             line.on('update line', (points) => {
@@ -190,6 +190,8 @@ module.exports = class DrawSynth {
             pressedKeys[e.key] = false; 
             if(e.key === 'q') {
                 if(this.currLine.isRecording) this.currLine.stopRecording(performance.now())
+            } else if (e.key === 'a') {
+              
             }
         })
         window.addEventListener('keydown', (e) => {
@@ -214,9 +216,19 @@ module.exports = class DrawSynth {
                     this.lines.forEach((l) => { l.clear() })
                 }
                 this.currLine.clear()
-            } else if (e.key === 'r') {
+            } else if (e.key === 'a' || e.key === 'e') {
+                  let index =  this.currLine.index + 2
+                if(index > this.lines.length) {
+                    index = 1
+                }
+                console.log('selecting', index)
+                this.emit('draw:select', index)
+
                 //  if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording(performance.now())
                 // this.multiRecord = !this.multiRecord
+            } else if (e.key === 'r') {
+               // this.currLine.clear()
+               this.currLine.clearFirst()
             }
         })
 
@@ -272,7 +284,7 @@ module.exports = class DrawSynth {
         const i = parseFloat(index)
         this.currIndex = i
         if (index == 0) {
-            this.currLine = this.baseCanvas
+          //  this.currLine = this.baseCanvas
             //   console.log('set current line to', this.baseCanvas, this.currLine)
             // this.currIndex = index
         } else {

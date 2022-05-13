@@ -9,6 +9,8 @@ module.exports = class Midi extends Bus {
         this.inputs = []
         this.outputs = []
         this.currDevice = null
+
+        this._cc = [] // store past cc values, only update on change
     }
 
     initDevices(midi) {
@@ -26,6 +28,8 @@ module.exports = class Midi extends Bus {
         for (let output = outputs.next(); output && !output.done; output = outputs.next()) {
           this.outputs.push(output.value);
         }
+
+       this._cc = this.outputs.map(() => new Array(100).fill(0).map(() => new Array(127).fill(0)))
 
         this.emit('device update', this.inputs, this.outputs)
 
@@ -71,10 +75,18 @@ module.exports = class Midi extends Bus {
         }
     }
 
-    cc(controller = 0, val = 100, channel = 0) {
+    cc(controller = 0, _val = 100, channel = 0) {
         if(this.currDevice!== null) {
-            const control = 0xB0
-            this.outputs[this.currDevice].send([control + channel, controller, val])
+          //  if(val >= 0 && val <= 127) {
+              const val = Math.max(0, Math.min(_val, 127))
+                const past = this._cc[this.currDevice][channel][controller]
+                if(past !== val) {
+                    const control = 0xB0
+                   //console.log('sending', val)
+                    this.outputs[this.currDevice].send([control + channel, controller, val])
+                    this._cc[this.currDevice][channel][controller] = val
+                }
+           // }
         }
     }
 

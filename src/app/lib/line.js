@@ -44,6 +44,7 @@ module.exports = class Line extends Bus {
         this.setInterval(interval)
         this.index = i
         this.color = color
+        this.timeOffset = 0
         this.strokeStyle = `rgb(${color[0], color[1], color[2]})`
         // this._strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         this._lastUpdate = 0
@@ -291,11 +292,13 @@ module.exports = class Line extends Bus {
     }
 
     simplifyStroke(_stroke) {
+        if(_stroke.points.length > 20) {
         const simplified = simplify(_stroke.points, this.strokeParams.simplify)
         _stroke.simplified = simplified
 
         const simplified2 = simplify(_stroke.points, 15)
        _stroke.points = simplified2
+        }
     }
 
     _renderStrokes() {
@@ -356,12 +359,32 @@ module.exports = class Line extends Bus {
         this.strokes = []
         //this._updateLine()
         this._renderStrokes()
+        this.timeOffset = 0
+    }
+
+    clearFirst() {
+        if(this.strokes.length > 1) {
+            const timeOffset = this.strokes[1].points[0].t
+            this._startTime = this._startTime + timeOffset
+            this.duration -= timeOffset
+            this.strokes.shift()
+            this.strokes.forEach((stroke) => {
+                stroke.points.forEach((point) => {
+                    point.t -= timeOffset
+                })
+            })
+            this.timeOffset += timeOffset
+            this._renderStrokes()
+        } else {
+            this.clear()
+        }
     }
 
     _move(t) {
         if (!this.isRecording && this.currStroke.points.length > 1) {
             // const start = p[0].t
             // const dur = end - start
+            t -= this.timeOffset
             const progress = (t - this._startTime) % this.duration
             // console.log('progess', progress)
 
