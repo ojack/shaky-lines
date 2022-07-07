@@ -3,7 +3,7 @@ const devtools = require('choo-devtools')
 const choo = require('choo')
 const store = require('./app/store.js')
 const mainView = require('./app/views/spirals.js')
-const algo10 = require('./app/views/algo10.js')
+// const algo10 = require('./app/views/algo10.js')
 // const Fabric = require('./app/views/fabric.js')
 
 // const controls = require('./app/views/controls.js')
@@ -34,10 +34,10 @@ app.use(store)
 app.use(keymaps)
 app.route('/', mainView)
 app.route('/spirals', mainView)
-app.route('/algo10', algo10)
-app.route('/#algo10', algo10)
+// app.route('/algo10', algo10)
+// app.route('/#algo10', algo10)
 
-app.route('/spirals/algo10', algo10)
+// app.route('/spirals/algo10', algo10)
 app.route('*', mainView)
 
 

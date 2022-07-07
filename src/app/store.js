@@ -1,6 +1,7 @@
 const performance = require('./../performance/code-notes.js')
 const examples = require('./examples.js')
-const repl = require('./views/editor/repl.js')
+// const repl = require('./views/editor/repl.js')
+const repl = require('./views/hydra-editor-cm6/src/hydra-environment/repl.js').default
 
 module.exports = (state, emitter) => {
   // state.selected = null
@@ -18,7 +19,7 @@ module.exports = (state, emitter) => {
     // color1: "aquamarine"
     // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
-    width: window.innerWidth,
+    width: window.innerHeight,
     height: window.innerHeight
     // width: 800,
     // height: 800
@@ -86,16 +87,18 @@ module.exports = (state, emitter) => {
   })
 
 
-  emitter.on('editor:evalAll', function () {
-    const editor = state.editor.editor
-    const code = editor.getValue()
-    repl.eval(code, (string, err) => {
-      editor.flashCode()
-      //  if (!err) sketches.saveLocally(code)
-    })
+  emitter.on('editor:evalAll', function (line) {
+    // const editor = state.editor.editor
+    // const code = editor.getValue()
+    // repl.eval(code, (string, err) => {
+    //   editor.flashCode()
+    //   //  if (!err) sketches.saveLocally(code)
+    // })
+    repl.eval(line)
   })
 
   emitter.on('editor:evalLine', (line) => {
+    console.log('REPL', repl)
     repl.eval(line)
   })
 

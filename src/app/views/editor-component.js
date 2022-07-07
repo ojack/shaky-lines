@@ -9,6 +9,7 @@ module.exports = class Editor extends Component {
     this.local = state.components[id] = {}
     state.editor = this // hacky way fo sharing editor to rest of app
     this.emit = emit
+    
   }
 
   load (element) {

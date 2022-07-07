@@ -20,6 +20,8 @@ module.exports = class HydraCanvas extends Component {
 
     this.local = state.components[id] = {}
     this.state = state
+    this.emit = emit
+    // this.hydra = this
   }
 
   load (element) {
@@ -41,6 +43,7 @@ module.exports = class HydraCanvas extends Component {
     osc(40).thresh().out()
 
     this.state.hydra = hydra //hacky way to pass this canvas to other components
+    this.emit('hydra loaded')
   }
 
   update (center) {
