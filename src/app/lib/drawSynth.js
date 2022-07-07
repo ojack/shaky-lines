@@ -6,7 +6,7 @@ const colors = require('./colors.js')
 const MidiOut = require('./midi.js')
 const scale = require('./midi-scales.js')
 const { CanvasRenderer, BaseCanvas } = require('./canvas-renderer.js')
-
+const startup = require('./../../performance/hangar.js')
 const NUM_LINES = colors.length
 
 //window.scale = Scale
@@ -88,6 +88,8 @@ module.exports = class DrawSynth {
 
         solid().out()
 
+
+
         // strokeCanvas.style.display = 'none'
         // markerCanvas.style.display = 'none'
 
@@ -121,8 +123,10 @@ module.exports = class DrawSynth {
                 //   this.synth.trigger(1) 
                 //this.midi.send(80 - i * 5)
                 //  this.midi.note(quantize(1 - y / height, notes), 100, _timeToNext - 10, i)
-                this.midi.cc(i, 127 * (1-y))
-                this.midi.cc(NUM_LINES + i, 127 * x)
+                if( i !== 2) {
+                    this.midi.cc(i, 127 * (1-y))
+                    this.midi.cc(NUM_LINES + i, 127 * x)
+                }
             },
             mode: "",
             //interval: interval/division // ms between checking for  each bang
@@ -276,6 +280,8 @@ module.exports = class DrawSynth {
         }).start()
 
         this.emit('draw:select', 1)
+
+        startup()
     }
 
     selectLine(index) {

@@ -261,7 +261,7 @@ module.exports = class Line extends Bus {
         points.push(p)
         this.marker = p
         this.x = this.marker.x / this.parentWidth // normalize x and y
-        this.y = this.marker.y / this.parentHeight
+        this.y = 1 - this.marker.y / this.parentHeight
         this.speed = this.marker.speed
 
         this.isRecording = true
@@ -296,8 +296,8 @@ module.exports = class Line extends Bus {
         const simplified = simplify(_stroke.points, this.strokeParams.simplify)
         _stroke.simplified = simplified
 
-        const simplified2 = simplify(_stroke.points, 15)
-       _stroke.points = simplified2
+     //   const simplified2 = simplify(_stroke.points, 15)
+     //  _stroke.points = simplified2
         }
     }
 
@@ -420,7 +420,7 @@ module.exports = class Line extends Bus {
             //  console.log(time, progress, strokeIndex, index, point, this.strokes, p)
             this.marker = point
             this.x = this.marker.x / this.parentWidth
-            this.y = this.marker.y / this.parentHeight
+            this.y = 1 -  this.marker.y / this.parentHeight
             this.speed = this.marker.speed
         }
     }

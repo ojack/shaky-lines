@@ -17,7 +17,7 @@ css(`.styled-background {
 }
 
 .CodeMirror-scroll {
-  max-height: 500px;
+  max-height: 300px;
 }
 
 .CodeMirror-line span {
