@@ -45,6 +45,20 @@ module.exports = class Midi extends Bus {
             //console.log('Midi received on cc#' + index + ' value:' + arr[2])    // uncomment to monitor incoming Midi
             var val = (arr[2]+1)/128.0  // normalize CC values to 0.0 - 1.0
             window.cc[index]=val
+
+            if(index === 6) {
+                window.a.settings[0].cutoff = val * 40
+            }
+            if(index === 7) {
+                window.a.settings[1].cutoff = val * 40
+            }
+            if(index === 22) {
+                window.a.settings[0].scale = val * 20
+            }
+
+            if(index === 23) {
+                window.a.settings[1].scale = val * 20
+            }
         }
 
         // start listening

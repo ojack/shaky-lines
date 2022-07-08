@@ -2,7 +2,7 @@
 // @todo: remove patch bay from thie (add to config)
 const html = require('choo/html')
 const Component = require('choo/component')
-const HydraSynth = require('hydra-synth')
+// const HydraSynth = require('hydra-synth')
 const loop = require('raf-loop')
 
 // const { desktopCapturer } = require('electron')
@@ -32,7 +32,7 @@ module.exports = class HydraCanvas extends Component {
 
     let precisionValue = isIOS ? 'highp' : 'mediump'
 
-    var hydra = new HydraSynth({ canvas: element, autoLoop: false,  precision: precisionValue})
+    var hydra = new Hydra({ canvas: this.canvas, autoLoop: false,  precision: precisionValue})
   //  osc(4, 0.1, 0.9).out()
     // addScreenshare(hydra)
    s0.init({src:window.fabricCanvas})
@@ -61,7 +61,8 @@ module.exports = class HydraCanvas extends Component {
     this.canvas = html`<canvas
       style="" width=${width} height=${height}
       ></canvas>`
-    return this.canvas
+      //return this.canvas
+    return html`<div>${this.canvas}</div>`
   }
 }
 

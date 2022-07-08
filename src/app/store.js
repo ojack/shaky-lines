@@ -19,7 +19,8 @@ module.exports = (state, emitter) => {
     // color1: "aquamarine"
     // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
-    width: window.innerHeight,
+  //  width: window.innerHeight,
+    width: window.innerWidth - 300,
     height: window.innerHeight
     // width: 800,
     // height: 800
