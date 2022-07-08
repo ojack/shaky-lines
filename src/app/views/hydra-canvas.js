@@ -35,7 +35,7 @@ module.exports = class HydraCanvas extends Component {
     var hydra = new HydraSynth({ canvas: element, autoLoop: false,  precision: precisionValue})
   //  osc(4, 0.1, 0.9).out()
     // addScreenshare(hydra)
-   // s0.init({src:window.fabricCanvas})
+   s0.init({src:window.fabricCanvas})
     var engine = loop(function(dt) {
       hydra.tick(dt)
     }).start()

@@ -18,7 +18,7 @@ module.exports = (state, emit) => {
     <input style="background-color:${state.style.color0};color:${state.style.color1};border-color:${state.style.color1}" class="f7 courier ba b--white h1 w4" value=${state.sketches.name} oninput=${(e) => emit('sketches:updateName', e.target.value)} type="text" id="file-name" name="file-name"/>
     ${state.sketches.visible ? html`
     <div 
-      class="overflow-y-auto f7 ba b--white" 
+      class="overflow-y-auto f7 ba b--white" style="position: relative;top: -138px;height: 120px;"
       onfocusout="${() => emit('sketches:close')}">
       ${Object.keys(state.sketches.all).reverse().map((key) => html`<div style="background-color:${state.style.color0};color:${state.style.color1}" class="dim pointer" onclick=${(e) => emit('sketches:load', key)}>${key}</div>`)}</div>` : ''}
     </div>
