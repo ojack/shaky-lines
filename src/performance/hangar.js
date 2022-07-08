@@ -46,20 +46,20 @@ p0.set({
 	trigger: () => {
 		//console.log('hi')
 		//console.log(p0._readPixel(100, 100))
-		p0.strokes.forEach((stroke) => {
-			stroke.points.forEach((p) => {
-				//  console.log(p)
-				//  if(p & p.x) {
-				const val = p0._readPixel(p.x, p.y)
-				//console.log(val, p.x, p.y)
-				// p.y -= (0.5 - val) * 3
-				p.y += Math.sin(time * 0.9)*0.4 * (0.5 - val) * 3
-				// }
-			})
-		//	p0.simplifyStroke(stroke)
-			p0.updateStroke(stroke)
-		})
-		p0._renderStrokes()
+		// p0.strokes.forEach((stroke) => {
+		// 	stroke.points.forEach((p) => {
+		// 		//  console.log(p)
+		// 		//  if(p & p.x) {
+		// 		const val = p0._readPixel(p.x, p.y)
+		// 		//console.log(val, p.x, p.y)
+		// 		// p.y -= (0.5 - val) * 3
+		// 		p.y += Math.sin(time * 0.9)*0.4 * (0.5 - val) * 3
+		// 		// }
+		// 	})
+		// //	p0.simplifyStroke(stroke)
+		// 	p0.updateStroke(stroke)
+		// })
+		// p0._renderStrokes()
 	},
 	interval: 80
 })

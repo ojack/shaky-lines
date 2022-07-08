@@ -318,7 +318,7 @@ module.exports = class Line extends Bus {
     }
 
     startRecording(t) {
-        console.log('starting to record')
+       // console.log('starting to record')
         this._startTime = t
         // this._bangTime = this._startTime
         this.numTransforms = 0
@@ -334,7 +334,7 @@ module.exports = class Line extends Bus {
         this.isRecording = false
         // this.duration =  p[p.length - 1].t
         this.duration = t - this._startTime
-        console.log(this._startTime, this.duration, this.strokes)
+      //  console.log(this._startTime, this.duration, this.strokes)
     }
 
     startStroke() {

@@ -97,13 +97,13 @@ module.exports = class DrawSynth {
         const pixels = new Uint8Array(4 * 1)
         const readPixel = (x, y) => {
             //console.log('reading', x, y)
-            gl.readPixels(x, canvas.height - y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
-            const red = pixels[0] / 255
-            const green = pixels[1] / 255
-            const blue = pixels[2] / 255
+            // gl.readPixels(x, canvas.height - y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+            // const red = pixels[0] / 255
+            // const green = pixels[1] / 255
+            // const blue = pixels[2] / 255
 
-            const val = (red + green + blue) / 3
-            return val
+            // const val = (red + green + blue) / 3
+            // return val
         }
 
         const bpm = 100
@@ -131,7 +131,7 @@ module.exports = class DrawSynth {
             mode: "",
             //interval: interval/division // ms between checking for  each bang
             //  interval: interval / division
-            interval: 200
+            interval: 2000
         }, i))
 
         this.lines.forEach((line) => {
@@ -190,7 +190,7 @@ module.exports = class DrawSynth {
         renderer.el.tabIndex = 0
 
         window.addEventListener('keyup',(e) => { 
-            console.log('key up', e.key)
+         //   console.log('key up', e.key)
             pressedKeys[e.key] = false; 
             if(e.key === 'q') {
                 if(this.currLine.isRecording) this.currLine.stopRecording(performance.now())
@@ -199,12 +199,12 @@ module.exports = class DrawSynth {
             }
         })
         window.addEventListener('keydown', (e) => {
-            console.log('key down', e.key)
+           // console.log('key down', e.key)
             pressedKeys[e.key] = true;
         })
 
         renderer.el.addEventListener('keydown', (e) => {
-            console.log(e.key, e)
+         //   console.log(e.key, e)
             if (isFinite(e.key)) {
                 // if(e.key === "0") {
                 //     this.currLine = this.baseCanvas
@@ -225,7 +225,7 @@ module.exports = class DrawSynth {
                 if(index > this.lines.length) {
                     index = 1
                 }
-                console.log('selecting', index)
+              //  console.log('selecting', index)
                 this.emit('draw:select', index)
 
                 //  if (this.multiRecord && this.currLine.isRecording) this.currLine.stopRecording(performance.now())
@@ -248,7 +248,7 @@ module.exports = class DrawSynth {
         })
 
         renderer.el.addEventListener('pointerup', (e) => {
-            console.log(pressedKeys)
+          //  console.log(pressedKeys)
             this.currLine.addPoint({
                 x: e.pageX, y: e.pageY, p: e.pressure, t: performance.now()
             })

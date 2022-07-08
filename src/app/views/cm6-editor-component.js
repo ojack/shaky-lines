@@ -25,6 +25,8 @@ module.exports = class Editor extends Component {
       autocompleteOptions: autocomplete 
     })
 
+    this.editor = editor
+
     editor.on("*", (e, args) => {
       this.emit(e, args)
   })
@@ -59,31 +61,34 @@ module.exports = class Editor extends Component {
   }
 
   hide() {
-    this.innerText.style.opacity = 0
-  }
+   
+    this.editor.cm.dom.style.opacity = 0
+    //this.innerText.style.opacity = 0
+}
 
   show() {
+    this.editor.cm.dom.style.opacity = 1
    // this.innerText.style.opacity = 1
     //this.innerText.style.pointerEvents = 'all'
   }
 
   update (state) {
     console.log('state', state)
-    //  if(typeof state !== 'undefined') {
+     if(typeof state !== 'undefined') {
       if(state.panels.editor === false) {
         console.log('hiding')
         this.hide()
     } else {
         this.show()
     }
-  // }
+  }
     return false
   }
 
   createElement ({ width = window.innerWidth, height = window.innerHeight} = {}) {
     this.textEl = html` <div></div>`
     this.logElement = html`<div class="console cm-s-default"></div>`
-    return html`<div id="editor-container" style="display:flex;flex-direction:column;">
+    return html`<div id="editor-container" style="display:flex;flex-direction:column;" class="overflow-y-scroll">
        ${this.textEl}
        ${this.logElement}
        </div>`
