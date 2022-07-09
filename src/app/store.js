@@ -1,7 +1,7 @@
 const performance = require('./../performance/code-notes.js')
 const examples = require('./examples.js')
 // const repl = require('./views/editor/repl.js')
-const repl = require('./views/hydra-editor-cm6/src/hydra-environment/repl.js').default
+const repl = require('./views/cm6-editor/hydra-cm6/repl.js').default
 
 module.exports = (state, emitter) => {
   // state.selected = null
@@ -20,7 +20,7 @@ module.exports = (state, emitter) => {
     // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
   //  width: window.innerHeight,
-    width: window.innerWidth - 300,
+    width: window.innerWidth - 380,
     height: window.innerHeight
     // width: 800,
     // height: 800
@@ -159,7 +159,14 @@ module.exports = (state, emitter) => {
 
   const p = localStorage.getItem('spiral-synth')
   if (p) {
-    state.sketches.all = Object.assign({}, state.sketches.all, JSON.parse(p))
+    const sketches = Object.assign({}, state.sketches.all, JSON.parse(p))
+    for(key in sketches) {
+      if(typeof sketches[key] !== 'string') delete sketches[key]
+    }
+ //   const filteredSketches = Object.entries(sketches).filter(([key, val]) => typeof val === 'string')
+   // console.log('FILTERED SKETCHES', filteredSketches)
+    state.sketches.all = sketches
+
     //   // state.presets.all = presets
     //   // state.presets.all = presets.map((_p, i) => ({
     //   //   name: _p.name,

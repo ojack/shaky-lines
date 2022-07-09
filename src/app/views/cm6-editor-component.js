@@ -2,8 +2,8 @@ const html = require('choo/html')
 const Component = require('choo/component')
 // const HydraEditor = require('./editor/editor.js')
 const log = require('./editor/log.js')
-import HydraEditor from './hydra-editor-cm6/src/editor.js'
-import createHydraAutocomplete from './hydra-editor-cm6/src/hydra-autocomplete.js'
+import HydraEditor from './cm6-editor/editor.js'
+import createHydraAutocomplete from './_______hydra-editor-cm6/src/hydra-autocomplete.js'
 
 module.exports = class Editor extends Component {
   constructor (id, state, emit) {

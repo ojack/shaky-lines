@@ -1,5 +1,39 @@
 module.exports = () => {
-//     markerCanvas.style.mixBlendMode = "difference"
+ markerCanvas.style.mixBlendMode = "difference"
+ markerCanvas.style.opacity = 0
+ strokeCanvas.style.opacity = 0
+
+ bpm = 60
+ s1.init({
+    src: markerCanvas
+  })
+
+ p0.setMarker({
+    width: () => p0.y*width,
+    height: 30,
+    color: 'black',
+    lineColor: 'white',
+    lineWidth: 4
+  })
+  
+  p1.setMarker({
+    width: 10,
+    height: 10,
+    color: 'black',
+    lineColor: 'white',
+    lineWidth: 3
+  })
+
+  p2.setMarker({
+    width: 10,
+    height: 10,
+    color: 'black',
+    lineColor: 'white',
+    lineWidth: 2
+  })
+
+
+
 // p0.setMarker({
 // 	width: 30,
 // 	height: 30,
@@ -8,31 +42,31 @@ module.exports = () => {
 // 	lineWidth: 6
 // })
 
-// p1.setStroke({
-// 	size: 8,
-// 	thinning: 0,
-// 	smoothing: 0,
-// 	streamline: 0,
-// 	color: 'green',
-// 	simplify: 10
-// })
+p1.setStroke({
+	size: 8,
+	thinning: 0,
+	smoothing: 0,
+	streamline: 0,
+	color: 'green',
+	simplify: 10
+})
 
 // p1.setMarker({
 // 	alpha: 0
 // })
 
-// p3.setStroke({
-// 	size: 100,
-// 	thinning: 4,
-// 	blending: 'difference'
-// })
+p3.setStroke({
+	size: 100,
+	thinning: 4,
+	blending: 'difference'
+})
 
-// p2.setStroke({
-// 	size: 150,
-// 	thinning: 4,
-// 	blending: 'difference',
-//    color: 'blue'
-// })
+p2.setStroke({
+	size: 150,
+	thinning: 4,
+	blending: 'difference',
+   color: 'blue'
+})
 
 // p3.setMarker({
 // 	alpha: 0
