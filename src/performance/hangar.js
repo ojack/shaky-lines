@@ -17,18 +17,19 @@ module.exports = () => {
   })
   
   p1.setMarker({
-    width: 10,
-    height: 10,
-    color: 'black',
-    lineColor: 'white',
-    lineWidth: 3
+    width: 30,
+    height: 30,
+    color: 'yellow',
+    lineColor: 'green',
+   // lineWidth: 40,
+    lineWidth: () => 10 + p0.x*10
   })
 
   p2.setMarker({
     width: 10,
     height: 10,
-    color: 'black',
-    lineColor: 'white',
+    color: 'yellow',
+    lineColor: 'blue',
     lineWidth: 2
   })
 

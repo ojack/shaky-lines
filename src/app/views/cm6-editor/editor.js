@@ -32,6 +32,8 @@ import { hydraSyntaxStyle, hydraEditorTheme } from "./hydra-cm6/theme.js";
 import { jsLinter } from "./hydra-cm6/hydra-lint/lint.js"
 import { js_beautify } from 'js-beautify'
 
+import { hydraEval as evaluation } from "./hydra-cm6/hydra-eval.js";
+
 // import EventEmitter from 'events'
 
 export default class Editor extends EventEmitter {
@@ -93,10 +95,7 @@ export default class Editor extends EventEmitter {
           syntaxHighlighting(hydraSyntaxStyle),
           syntaxHighlighting(oneDarkHighlightStyle, { fallback: true }),
           bracketMatching(),
-          autocompletion({
-            override: [autocompleteOptions],
-            closeOnBlur: false
-          }),
+          autocompletion({ override: [autocompleteOptions], closeOnBlur: false}),
           closeBrackets(),
           rectangularSelection(),
           crosshairCursor(),
@@ -113,7 +112,7 @@ export default class Editor extends EventEmitter {
             ...commentKeymap,
             ...snippetKeymap.default,
             // ...evalKeymap
-            ...hydraKeymaps
+          //  ...hydraKeymaps
           ]),
           javascript(),
           // javascriptLanguage.data.of({
@@ -123,7 +122,13 @@ export default class Editor extends EventEmitter {
           //    ...hydraSnippets
           //   ]
           // }),
-
+          evaluation((code) => { 
+            self.emit('editor:eval', code)
+            // @todo !! need access to current vie in order to pass info to linter
+          //   view.dispatch({
+          //     effects: evalLinter.reconfigure(linter(jsLinter()))
+          // })
+          }),
           hydraEditorTheme,
           flashTheme,
           oneDark,

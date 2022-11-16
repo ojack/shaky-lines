@@ -20,7 +20,7 @@ const randomize = (arr) => arr.map((obj) => Object.assign({}, obj, { apply: getF
 const createAutocomplete = ({ arrowFunctions, hydraConstants, srcOptions, setFunctionOptions, externalSourceOptions, combineNames, chainOptions, outputOptions, hydraGlobals }) => (context) => {
   let word = context.matchBefore(/\w*/)
   let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1)
-  console.log('running autocomplete', word)
+  // console.log('running autocomplete3', word)
   const parseArguments = (node) => {
     let object = node.parent?.getChild('Expression')
     let variableName = context.state.sliceDoc(object.from, object.to)
@@ -111,7 +111,15 @@ if (nodeBefore.name === '(') {
 if (nodeBefore.name === 'Script' || nodeBefore.parent?.name === 'Script' || nodeBefore.parent?.parent?.name === 'Script') {
   return {
     from: word.from,
-    options: [...randomize(srcOptions), ...hydraGlobals, { label: 'rAnDoM', apply: generateRandom(), boost: 200 }]
+    options: [...randomize(srcOptions), ...hydraGlobals, { label: 'rAnDoM', apply: generateRandom(), boost: 200 },
+    { label: 'p0', apply: `p0.setMarker({
+      width: 100,
+      height: 30,
+      color: 'black',
+      lineColor: 'white',
+      lineWidth: 4
+    })`, boost: 201},
+  ]
   }
 }
 return null

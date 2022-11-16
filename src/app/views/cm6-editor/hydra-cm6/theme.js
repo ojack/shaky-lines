@@ -29,7 +29,7 @@ export const hydraSyntaxStyle = HighlightStyle.define([
   export const hydraEditorTheme =  EditorView.theme({
     '&': {
       backgroundColor: 'transparent',
-      fontSize: '15px',
+      fontSize: '17px',
       // color: 'white',
       fontFamily: `'Roboto Mono', monospace`,
       // mixBlendMode: 'difference'

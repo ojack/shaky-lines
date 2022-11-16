@@ -77,7 +77,7 @@ module.exports.init = (el) => {
             // p.start()
         }
 
-        query(str = "bell", duration = [0, 1.5], pageSize = 5) {
+        query(str = "bell", duration = [0.05, 0.4], pageSize = 10) {
             query({ query: str, minDuration: duration[0], maxDuration: duration[1], pageSize: pageSize }, (sounds) => {
                 console.log('got sounds', sounds,sounds.results[0].id )
                 el.innerHTML += `loaded ${str} sounds`
@@ -159,16 +159,16 @@ module.exports.init = (el) => {
         }
 
         _trigger() {
-             console.log('playing')
              const index = this._index()
              const p = this.samples[index]
              if (this.active && p && p.loaded) {
+                console.log('playing', p)
                  Object.entries(this.audioParams).forEach(([prop, value]) => {
                      p[prop] = value()
                  })
                  p.start()
                 // this._trigger(p)
-                 el.innerHTML += `playing [${index}] ${this.sounds[index].name}. ${p.buffer.duration.toFixed(2)} .${this.sounds[index].analysis.lowlevel.pitch.mean}}  `
+               //  el.innerHTML += `playing [${index}] ${this.sounds[index].name}. ${p.buffer.duration.toFixed(2)} .${this.sounds[index].analysis.lowlevel.pitch.mean}}  `
                  el.scrollTop = el.scrollHeight;
              }
             

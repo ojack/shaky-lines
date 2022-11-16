@@ -88,23 +88,33 @@ module.exports = (state, emitter) => {
   })
 
 
-  emitter.on('editor:evalAll', function (line) {
+  // emitter.on('editor:evalAll', function (line) {
+  //   // const editor = state.editor.editor
+  //   // const code = editor.getValue()
+  //   // repl.eval(code, (string, err) => {
+  //   //   editor.flashCode()
+  //   //   //  if (!err) sketches.saveLocally(code)
+  //   // })
+  //   repl.eval(line)
+  // })
+
+  // emitter.on('editor:evalLine', (line) => {
+  //   console.log('REPL', repl)
+  //   repl.eval(line)
+  // })
+
+  // emitter.on('editor:evalBlock', (block) => {
+  //   repl.eval(block)
+  // })
+
+  emitter.on('editor:eval', function (code) {
     // const editor = state.editor.editor
     // const code = editor.getValue()
     // repl.eval(code, (string, err) => {
     //   editor.flashCode()
     //   //  if (!err) sketches.saveLocally(code)
     // })
-    repl.eval(line)
-  })
-
-  emitter.on('editor:evalLine', (line) => {
-    console.log('REPL', repl)
-    repl.eval(line)
-  })
-
-  emitter.on('editor:evalBlock', (block) => {
-    repl.eval(block)
+    repl.eval(code)
   })
 
   // emitter.on('editor:preset', (index) => {

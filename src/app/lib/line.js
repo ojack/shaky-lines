@@ -85,7 +85,7 @@ module.exports = class Line extends Bus {
                 cap: false,
                 taper: 0
             },
-            simulatePressure: false // uncomment to use with tablet
+            // simulatePressure: false // uncomment to use with tablet
         }
 
 

@@ -5,7 +5,7 @@ import { jsLinter } from "./hydra-lint/lint.js"
 import { Compartment } from "@codemirror/state"
 import hydraKeys from './keymap-config.js'
 
-let evalLinter = new Compartment
+// let evalLinter = new Compartment
 export default Object.entries(hydraKeys).map(([key, val]) => ({
     key: key,
     run: (view) => {
@@ -27,9 +27,9 @@ export default Object.entries(hydraKeys).map(([key, val]) => ({
         }
      //   self.emit(val, text)
         // setTimeout(() => { 
-       view.dispatch({
-            effects: evalLinter.reconfigure(linter(jsLinter()))
-        })
+    //    view.dispatch({
+    //         effects: evalLinter.reconfigure(linter(jsLinter()))
+    //     })
         // forceLinting(self.cm) 
         //}, 100)
     }

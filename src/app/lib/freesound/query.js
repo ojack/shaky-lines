@@ -16,11 +16,12 @@ module.exports.query =  function ({query = "bell", minDuration, maxDuration, pag
     }
     freesound.textSearch(query, {page:1, filter:filter, 
         fields:fields, 
-       // descriptors_filter: 'lowlevel.pitch.mean:[219.9 TO 220.1]',
+        // descriptors_filter:
+    //    descriptors_filter: 'lowlevel.pitch.mean:[219.9 TO 220.1]',
       // target: "lowlevel.pitch.mean:220",
         descriptors: descriptors, 
          page_size:pageSize, 
-         group_by_pack:1},
+         group_by_pack:0},
          callback
          ,function(err){ console.log("Error while searching...", err)}
      );
