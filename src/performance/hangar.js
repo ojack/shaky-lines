@@ -9,7 +9,7 @@ module.exports = () => {
   })
 
  p0.setMarker({
-    width: () => p0.y*width,
+    width: 10,
     height: 30,
     color: 'black',
     lineColor: 'white',
@@ -19,10 +19,12 @@ module.exports = () => {
   p1.setMarker({
     width: 30,
     height: 30,
-    color: 'yellow',
-    lineColor: 'green',
+    // color: 'yellow',
+    // lineColor: 'green',
+    color: 'black',
+    lineColor: 'white',
    // lineWidth: 40,
-    lineWidth: () => 10 + p0.x*10
+    lineWidth: () => 1 + p0.x*4
   })
 
   p2.setMarker({
@@ -68,6 +70,20 @@ p2.setStroke({
 	blending: 'difference',
    color: 'blue'
 })
+
+reverb.wet.value = 0
+delay.wet.value = 0
+
+// f0.set({
+//   query: "bell",
+//   test: () => { 
+//     console.log('hi')
+//     //f0.loadSimilar(0)
+//   },
+//  // notes: ['a4', 'e3'],
+//   //index: () => wrand([0, 1, 2, 3, 4], [])
+//   index: 0
+// })
 
 // p3.setMarker({
 // 	alpha: 0

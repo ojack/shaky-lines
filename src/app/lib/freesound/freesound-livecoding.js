@@ -61,8 +61,13 @@ module.exports.init = (el) => {
                 }, self._currInterval)
             }
             this.audioParams = {}
+            this.instrumentParams = {
+                gain: 1,
+                mutation: 0,
+                duration: null
+            }
             this._loop()
-            this.mode = 
+            // this.mode = 
             this.gain = new Tone.Gain(0.7).connect(delay)
             this.active = true
             //new Array(numSamples).fill(0).map(() => new Tone.)
@@ -79,7 +84,8 @@ module.exports.init = (el) => {
 
         query(str = "bell", duration = [0.05, 0.4], pageSize = 10) {
             query({ query: str, minDuration: duration[0], maxDuration: duration[1], pageSize: pageSize }, (sounds) => {
-                console.log('got sounds', sounds,sounds.results[0].id )
+                console.log('got sounds', sounds)
+                //,sounds.results[0].id )
                 el.innerHTML += `loaded ${str} sounds`
                 const testSound = sounds.getSound(0)
                 console.log('got test sound', testSound)
@@ -94,9 +100,10 @@ module.exports.init = (el) => {
             // const s = this.soundCollection.getSound(i)
             loadSimilar(this.sounds[i],
                 (sounds) => {
-                console.log('got', sounds)
-                if(sounds.results.length > 1) {
-                    const sound = sounds.results[1]
+                console.log('got', sounds, sounds.results.length)
+                if(sounds.results.length > 0) {
+                    const randSound = Math.floor(Math.random() * sounds.results.length)
+                    const sound = sounds.results[randSound]
                     this.sounds[i] = sounds.getSound(1)
                     this.samples[i].stop()
                     this.samples[i] = new Tone.Player(sound.previews[audio_preview_key]).connect(this.gain)
@@ -131,17 +138,20 @@ module.exports.init = (el) => {
 
        
         set(params = {}) {
+            let shouldQuery = false
             Object.entries(params).forEach(([method, value]) => {
                 //this[method](value)
                 console.log('setting', method, value)
                 if (method === "query") {
-                    this.query(value)
-                } else if (method === "interval" || method === "index" || method === "notes") {
+                    shouldQuery = true
+                    // this.query(value)
+                } else if (method === "interval" || method === "index" || method === "notes" || method === "duration" || method === "gain" || method === "mutate") {
                     this[`_${method}`] = formatParams(value)
                 } else {
                     this.audioParams[method] = formatParams(value)
                 }
             })
+            if(shouldQuery) this.query(params.query)
         }
     }
 
@@ -164,11 +174,14 @@ module.exports.init = (el) => {
              if (this.active && p && p.loaded) {
                 console.log('playing', p)
                  Object.entries(this.audioParams).forEach(([prop, value]) => {
+                    console.log(prop, value)
                      p[prop] = value()
                  })
                  p.start()
                 // this._trigger(p)
-               //  el.innerHTML += `playing [${index}] ${this.sounds[index].name}. ${p.buffer.duration.toFixed(2)} .${this.sounds[index].analysis.lowlevel.pitch.mean}}  `
+                //${/*this.sounds[index].analysis.lowlevel.pitch.mean*/}
+                console.log(this.sounds[index].name, p.buffer.duration.toFixed(2))
+                el.innerHTML += `playing [${index}] ${this.sounds[index].name}. ${p.buffer.duration.toFixed(2)} .}  `
                  el.scrollTop = el.scrollHeight;
              }
             
