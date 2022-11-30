@@ -18,7 +18,9 @@ const getFunctionText = (f = () => { }) => {
 const randomize = (arr) => arr.map((obj) => Object.assign({}, obj, { apply: getFromName(obj.id) }))
 
 const createAutocomplete = ({ arrowFunctions, hydraConstants, srcOptions, setFunctionOptions, externalSourceOptions, combineNames, chainOptions, outputOptions, hydraGlobals }) => (context) => {
+ 
   let word = context.matchBefore(/\w*/)
+  if (!context.explicit) return null
   let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1)
   console.log('running autocomplete2', word)
   const parseArguments = (node) => {

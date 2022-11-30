@@ -56,10 +56,11 @@ module.exports.init = (el) => {
             this._mutate = () => 0  // mutation probability over / 100
             
             const self = this
+            this.activeTimeout = null
             this._loop = () => {
                 //  console.log('calling loop')
                 this._currInterval = this._interval()
-                setTimeout(() => {
+                this.activeTimeout = setTimeout(() => {
                     self._play()
                 }, self._currInterval)
             }
@@ -139,6 +140,18 @@ module.exports.init = (el) => {
             // })
         }
 
+        stop() {
+            this.samples.forEach((sample) => {
+                sample.stop()
+            })
+            this.active = false
+           this.clearTimout(this.activeTimeout)
+        }
+
+        start() {
+            this._loop()
+            this.active = true
+        }
        
         set(params = {}) {
             let shouldQuery = false
