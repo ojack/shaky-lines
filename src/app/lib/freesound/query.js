@@ -18,7 +18,7 @@ module.exports.query =  function ({query = "bell", minDuration, maxDuration, pag
         fields:fields, 
         // descriptors_filter:
     //    descriptors_filter: 'lowlevel.pitch.mean:[219.9 TO 220.1]',
-      // target: "lowlevel.pitch.mean:220",
+        // target: "lowlevel.pitch.mean:1200",
         descriptors: descriptors, 
          page_size:pageSize, 
          group_by_pack:0},
@@ -27,11 +27,18 @@ module.exports.query =  function ({query = "bell", minDuration, maxDuration, pag
      );
 }
 
-module.exports.loadSimilar = (sound, success, error) => {
+module.exports.loadSimilar = ({sound, minDuration, maxDuration, pageSize = 5}, success, error) => {
+    let filter = ''
+    if(minDuration !== null) {
+        filter += `duration:[${minDuration}%20TO%20${maxDuration}]`
+        // filter+= `%20ac_note_midi:60`
+    }
+    console.log('filter is', filter)
     sound.getSimilar(success, error, {
         fields: fields,
+        filter: filter,
         descriptors: descriptors,
-        page_size: 5
+        page_size: pageSize
     })
 }
 

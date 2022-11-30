@@ -54,7 +54,7 @@
             if (paramStr){
                 uri = uri +"?"+ paramStr;
             }
-            
+            // console.log('making request', params, uri)
             if (typeof module !== 'undefined'){ // node.js
                 var http = require("http");
                 var options = {
@@ -139,7 +139,7 @@
     var SoundCollection = function(jsonObject){
         var collection = Collection(jsonObject);
         collection.getSound = function (idx){
-            console.log('collection', collection)
+         //   console.log('collection', collection)
             return new SoundObject(collection.results[idx]);
         };
         return collection;

@@ -1,9 +1,16 @@
+const { solarizedDark } = require("cm6-theme-solarized-dark")
+
 module.exports = () => {
  markerCanvas.style.mixBlendMode = "difference"
  markerCanvas.style.opacity = 0
  strokeCanvas.style.opacity = 0
 
+ solid(0, 0, 0, 0).out()
+ 
  bpm = 60
+ s2.initCam()
+
+src(s2).luma(0.4, 0).mask(shape(4, 0.99, 0)).scale(0.6).contrast().scrollX(-0.1).scrollY(-0.2).out(o1)
  s1.init({
     src: markerCanvas
   })
@@ -46,7 +53,7 @@ module.exports = () => {
 // })
 
 p1.setStroke({
-	size: 8,
+	size: 30,
 	thinning: 0,
 	smoothing: 0,
 	streamline: 0,
