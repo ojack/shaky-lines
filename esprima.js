@@ -1,7 +1,7 @@
 (function webpackUniversalModuleDefinition(root, factory) {
     /* istanbul ignore next */
         if(typeof exports === 'object' && typeof module === 'object')
-            export default  factory();
+            module.exports = factory();
         else if(typeof define === 'function' && define.amd)
             define([], factory);
     /* istanbul ignore next */
@@ -4861,23 +4861,23 @@
                 this.expectKeyword('export');
                 var exportDeclaration;
                 if (this.matchKeyword('default')) {
-                    // export default ...
+                    // module.exports =...
                     this.nextToken();
                     if (this.matchKeyword('function')) {
-                        // export default function foo () {}
-                        // export default function () {}
+                        // module.exports =function foo () {}
+                        // module.exports =function () {}
                         var declaration = this.parseFunctionDeclaration(true);
                         exportDeclaration = this.finalize(node, new Node.ExportDefaultDeclaration(declaration));
                     }
                     else if (this.matchKeyword('class')) {
-                        // export default class foo {}
+                        // module.exports =class foo {}
                         var declaration = this.parseClassDeclaration(true);
                         exportDeclaration = this.finalize(node, new Node.ExportDefaultDeclaration(declaration));
                     }
                     else if (this.matchContextualKeyword('async')) {
-                        // export default async function f () {}
-                        // export default async function () {}
-                        // export default async x => x
+                        // module.exports =async function f () {}
+                        // module.exports =async function () {}
+                        // module.exports =async x => x
                         var declaration = this.matchAsyncFunction() ? this.parseFunctionDeclaration(true) : this.parseAssignmentExpression();
                         exportDeclaration = this.finalize(node, new Node.ExportDefaultDeclaration(declaration));
                     }
@@ -4885,9 +4885,9 @@
                         if (this.matchContextualKeyword('from')) {
                             this.throwError(messages_1.Messages.UnexpectedToken, this.lookahead.value);
                         }
-                        // export default {};
-                        // export default [];
-                        // export default (1 + 2);
+                        // module.exports ={};
+                        // module.exports =[];
+                        // module.exports =(1 + 2);
                         var declaration = this.match('{') ? this.parseObjectInitializer() :
                             this.match('[') ? this.parseArrayInitializer() : this.parseAssignmentExpression();
                         this.consumeSemicolon();
