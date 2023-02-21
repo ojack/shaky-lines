@@ -5,9 +5,8 @@
   "main": "electron-start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify -p esmify -d src/index.js -o dist/bundle.js -v -t [ babelify --presets [ @babel/preset-env ] --plugins [@babel/plugin-transform-runtime]",
     "server": "live-server dist --https=certs/ssl.js --cors",
-    "start": "npm run watch & npm run server",
+    "start": "vite .",
     "publish": "git subtree push --prefix=dist git@github.com:ojack/fubbles.git main"
   },
   "author": "ojack",
@@ -44,11 +43,14 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-runtime": "^7.16.0",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "babelify": "^10.0.0",
     "esmify": "^2.1.1",
     "http-server": "^0.12.3",
     "http-server-ssl": "0.0.7",
     "live-server": "^1.2.1",
+    "vite": "^4.1.4",
+    "vite-plugin-ngmi-polyfill": "^0.0.2",
     "watchify": "^3.11.1"
   }
 }

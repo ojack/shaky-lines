@@ -1,9 +1,13 @@
 const html = require('choo/html')
 const Component = require('choo/component')
+import repl from './hydra-cm6-editor/repl.js'
+
 // const HydraEditor = require('./editor/editor.js')
-const log = require('./editor/log.js')
-import HydraEditor from './cm6-editor/editor.js'
-import createHydraAutocomplete from './_______hydra-editor-cm6/src/hydra-autocomplete.js'
+// const log = require('./editor/log.js')
+import HydraEditor from './hydra-cm6-editor/editor.js'
+import createHydraAutocomplete from './hydra-cm6-editor/hydra-lang/hydra-autocomplete.js'
+
+// import createHydraAutocomplete from './_______hydra-editor-cm6/src/hydra-autocomplete.js'
 
 module.exports = class Editor extends Component {
   constructor (id, state, emit) {
@@ -28,22 +32,28 @@ module.exports = class Editor extends Component {
     this.editor = editor
 
     editor.on("*", (e, args) => {
+      console.log('22222emitting', e, args)
       this.emit(e, args)
   })
 
-  //   editor.on('editor:evalLine', (line) => {
-  //     console.log('called eval line!')
-  //     repl.eval(line)
-  // })
+    editor.on('editor:evalLine', (line) => {
+      console.log('called eval line!')
+      repl.eval(line)
+  })
+
+  editor.on('editor:evalAll', (line) => {
+    console.log('called eval line!')
+    repl.eval(line)
+})
   
-  // editor.on('editor:evalBlock', (line) => {
-  //     console.log('called eval line!')
-  //     repl.eval(line)
-  // })
+  editor.on('editor:evalBlock', (line) => {
+      console.log('called eval line!')
+      repl.eval(line)
+  })
   
-  // editor.on('hideAll', (el, hi) => {
-  //     console.log('called', el, hi)
-  // })
+  editor.on('hideAll', (el, hi) => {
+      console.log('called', el, hi)
+  })
   
   // editor.on('editor:evalAll', (line) => {
   //     console.log('called eval all!')

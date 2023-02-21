@@ -18,6 +18,7 @@ const getFunctionText = (f = () => { }) => {
 const randomize = (arr) => arr.map((obj) => Object.assign({}, obj, { apply: getFromName(obj.id) }))
 
 const createAutocomplete = ({ arrowFunctions, hydraConstants, srcOptions, setFunctionOptions, externalSourceOptions, combineNames, chainOptions, outputOptions, hydraGlobals }) => (context) => {
+  if (!context.explicit) return null
   let word = context.matchBefore(/\w*/)
   let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1)
   // console.log('running autocomplete3', word)

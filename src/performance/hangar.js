@@ -10,7 +10,7 @@ module.exports = () => {
  bpm = 60
  s2.initCam()
 
-src(s2).luma(0.4, 0).mask(shape(4, 0.99, 0)).scale(0.6).contrast().scrollX(-0.1).scrollY(-0.2).out(o1)
+src(s2).luma(0.2, 0).mask(shape(4, 0.99, 0)).scale(0.6).contrast().scrollX(-0.1).scrollY(-0.2).out(o1)
  s1.init({
     src: markerCanvas
   })

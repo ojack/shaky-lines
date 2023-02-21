@@ -4,16 +4,8 @@ src(s2).luma(0.4, 0).mask(shape(4, 0.99, 0)).scale(0.6).contrast().scrollX(-0.1)
 
 solid().out()
 
-f0.set({
-  query: "conga",
-  interval: [800, 100, 100, 100],
- // notes: ['a4', 'e3'],
-  //index: () => wrand([0, 1, 2, 3, 4], [])
-  mutate: 10,
-  playbackRate: [0.2, 0.3, 0.6, 1, 2],
-  index: [1, 2, 3, 4],
-  gain: () => p0.y
-})
+
+
 
 src(o0)
     .scrollY(() => -0.008*p3.y)
@@ -46,3 +38,24 @@ src(o0)
 src(o0).luma(0.3).out(o2)
 
 render(o2)
+
+
+f0.set({
+  query: "conga",
+  interval: [800, 100, 100, 100],
+ // notes: ['a4', 'e3'],
+  //index: () => wrand([0, 1, 2, 3, 4], [])
+  mutate: 10,
+  playbackRate: [0.2, 0.3, 0.6, 1, 2],
+  index: [1, 2, 3, 4],
+  gain: () => p0.y
+})
+
+f0.set({
+  query: "house loop",
+  interval: [200, 200, 200, 200],
+ // notes: ['a4', 'e3'],
+  index: () => wrand([0, 1, 2, 3, 4], [])
+  playbackRate: 2,
+  index: [0, 4, 1, 4, 2, 4, 3, 4]
+})

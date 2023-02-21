@@ -122,13 +122,13 @@ export default class Editor extends EventEmitter {
           //    ...hydraSnippets
           //   ]
           // }),
-          evaluation((code) => { 
-            self.emit('editor:eval', code)
-            // @todo !! need access to current vie in order to pass info to linter
-          //   view.dispatch({
-          //     effects: evalLinter.reconfigure(linter(jsLinter()))
-          // })
-          }),
+          // evaluation((code) => { 
+          //   self.emit('editor:eval', code)
+          //   // @todo !! need access to current vie in order to pass info to linter
+          // //   view.dispatch({
+          // //     effects: evalLinter.reconfigure(linter(jsLinter()))
+          // // })
+          // }),
           hydraEditorTheme,
           flashTheme,
           oneDark,

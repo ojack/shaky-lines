@@ -14,7 +14,8 @@ const { ftm, wrand, euclid, seq } = util
 
 window.seq = seq
 window.wrand = wrand
-const { getStroke } = require('perfect-freehand')
+// const { getStroke } = require('perfect-freehand')
+import { getStroke } from 'perfect-freehand'
 
 function getSvgPathFromStroke(stroke) {
     if (!stroke.length) return ''

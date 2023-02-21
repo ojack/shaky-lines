@@ -1,7 +1,9 @@
 const performance = require('./../performance/code-notes.js')
 const examples = require('./examples.js')
+// import repl from './views/hydra-cm6-editor/repl.js'
+
 // const repl = require('./views/editor/repl.js')
-const repl = require('./views/cm6-editor/hydra-cm6/repl.js').default
+// const repl = require('./views/cm6-editor/hydra-cm6/repl.js').default
 
 module.exports = (state, emitter) => {
   // state.selected = null
@@ -20,7 +22,7 @@ module.exports = (state, emitter) => {
     // width: window.innerWidth < 900 ? 400 : 800,
     // height: window.innerWidth < 900 ? 400 : 800
   //  width: window.innerHeight,
-    width: window.innerWidth - 380,
+    width: window.innerWidth - 500,
     height: window.innerHeight
     // width: 800,
     // height: 800
@@ -89,6 +91,7 @@ module.exports = (state, emitter) => {
 
 
   // emitter.on('editor:evalAll', function (line) {
+  //   console.log('eval', line)
   //   // const editor = state.editor.editor
   //   // const code = editor.getValue()
   //   // repl.eval(code, (string, err) => {
@@ -107,15 +110,15 @@ module.exports = (state, emitter) => {
   //   repl.eval(block)
   // })
 
-  emitter.on('editor:eval', function (code) {
-    // const editor = state.editor.editor
-    // const code = editor.getValue()
-    // repl.eval(code, (string, err) => {
-    //   editor.flashCode()
-    //   //  if (!err) sketches.saveLocally(code)
-    // })
-    repl.eval(code)
-  })
+  // emitter.on('editor:eval', function (code) {
+  //   // const editor = state.editor.editor
+  //   // const code = editor.getValue()
+  //   // repl.eval(code, (string, err) => {
+  //   //   editor.flashCode()
+  //   //   //  if (!err) sketches.saveLocally(code)
+  //   // })
+  //   repl.eval(code)
+  // })
 
   // emitter.on('editor:preset', (index) => {
   //   loadPreset(index)
